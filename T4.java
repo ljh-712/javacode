@@ -1,13 +1,11 @@
-public class T4{
-public static void main(String[] args) {     
-int sum = 0;
-for (int i = 100; i <= 200; i++) {
-    if (i % 5 == 0 ^ i % 6 == 0) {
-        System.out.print(i + " ");
-        sum++;
-        if (sum % 10 == 0) {
-            System.out.println();
-        }
-    }
-}
-    }
+﻿方法：
+1、方法名采用小驼峰addSum
+2、在java中不需要声明方法
+3、Java中只有按值传递
+重载：overload
+1、函数名相同，参数列表（类型或参数个数不同）
+2、返回值类型不要求
+3、必须在同一个类中或者在继承关系上
+//可变参数编程
+
+
