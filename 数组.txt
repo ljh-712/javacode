@@ -1,0 +1,83 @@
+数组：相同数据类型的集合并且内存是连续的、
+      1、定义：int []arr={1,2,3,4,5};
+            int []arr2=new int[]{1,3,4,5,6};
+	        int []arr3=new int[5]    //new 产生一个对象
+	        ”引用“用来存放对象的地址；
+      2、数组长度：数组名.length(是数组的属性)
+      3、数组越界：（运行）异常：java.lang.ArrayIndexOutOfBoundsException 
+      4、遍历数组：for循环；for (int i = 0; i < arr2.length; i++){
+                       System.out.println(arr2[i]);
+					   }
+                foreach循环:for (int x:arr2) {//不能通过下标访问数组
+                                System.out.print(x+" ");
+						        }
+                如果遍历arr3，结果全是零(数组定义好后没有初始化，结果全为零)//数组当中如果是引用类型就是null
+				for和foreach循环的区别：foreach不能用下标去访问数组元素
+	 5、 参数传内置类型：
+	  public static void main(String[] args) {    
+	      int num = 0;    
+		  func(num);    
+		  System.out.println("num = " + num); 
+		  }
+
+	 public static void func(int x) {    
+	     x = 10;   
+		 System.out.println("x = " + x); 
+		}
+// 执行结果 x = 10 num = 0 
+修改形参 x 的值, 不影响实参的 num 的值
+    6、 参数传数组类型:
+	 public static void main(String[] args) {    
+	     int[] arr = {1, 2, 3};     
+	     func(arr);     
+	     System.out.println("arr[0] = " + arr[0]); 
+	 } 
+     public static void func(int[] a) {     
+	     a[0] = 10;     
+		 System.out.println("a[0] = " + a[0]); } 
+ 
+// 执行结果 a[0] = 10 arr[0] = 10 
+ 在函数内部修改数组内容, 函数外部也发生改变. 此时数组名 arr 是一个 "引用" . 当传参的时候, 是按照引用传参.
+ 所谓的 "引用" 本质上只是存了一个地址. Java 将数组设定成引用类型, 这样的话后续进行数组参数传参, 
+ 其实只是将数组的地址传入到函数形参中. 这样可以避免对整个数组的拷贝(数组可能比较长, 那么拷贝开销就会很大).
+7、JVM：虚拟机，它的内存区域划分：
+(1、jvm虚拟机栈：存储局部变量
+(2、本地方法栈：native方法：底层是由C/C++实现
+(3、程序计数器： 保存下一条执行的指令的地址
+(4、堆（Heap）：对象、JVM所管理的大内存区域. 使用 new 创建的对象都是在堆上保存 
+(5、方法区：静态变量、类信息
+(6、常量池：在JDK1.7前，常量池在方法区，1.7及其以后，被移到了堆中；
+8、int []arr2={1,2,3,4};
+   System.out.print(arr2); //输出：[I@1540e19d ——》代表地址哈希码
+9、null是所有引用类型的初始值
+   int []arr=null;
+   System.out.print(arr.length);
+   String str=null;
+   System.out.print(str.length());
+会产生空指针异常：java.lang.NullPointerException
+10、将数组以字符串形式输出：
+（1、直接调用arrays方法：import java.util.Arrays;
+                         int []arr={12,2,3,4,5};
+                         System.out.print(Arrays.toString(arr));
+11、copy数组
+（1、for循环
+（2、System.arraycopy(array,0,array2,0,array.length)
+(3、array2=Array.copyOf(array,array,length)
+(4、array2=array.clone();
+(5、浅拷贝：对引用类型的拷贝
+（6、深拷贝：对传值类型的拷贝//copyOf是对数组进行了深拷贝，即创建了一个新的数组对象，
+拷贝原有数组的所有元素到新的数组中，因此修改原数组，不会影响新数组。
+如果两个引用，同时指向一个对象，那麽通过一个引用修改当前对象的值后，那么另一个引用也会受到影响，这就是浅拷贝
+12、二维数组：
+不规则：
+int [][]array=new int [3][];
+array[0]=new int[2];
+array[1]=new int[3];
+array[2]=new int[4];
+规则de:
+int arr[][]={{1,2,3},{4,5,6},{7,8,9}};
+注意：int [][]arr1={{1,3},{4,5},{7,8,9}};用for循环打印会发生数组越界
+打印二维数组：for循环
+               Arrays.deepToString(array);
+
+					 
