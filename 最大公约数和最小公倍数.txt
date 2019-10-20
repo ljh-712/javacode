@@ -1,0 +1,21 @@
+  /*
+    求最大公约数
+     */
+ public static int fun2(int a,int b) {
+        int temp=0;
+        while(a%b!=0){
+            temp=a%b;
+            a=b;
+            b=temp;
+        }
+        return b;
+    }
+    /*
+    求最小公倍数
+     */
+    public static int fun3(int a,int b) {
+        int t=a*b;
+        int r=t/fun2(a,b);
+        return r;
+    }
+
