@@ -1,0 +1,36 @@
+class Calculator {
+    private int num1;
+    private int num2;
+
+    public void setNum1(int num1) {
+        this.num1 = num1;
+    }
+
+    public void setNum2(int num2) {
+        this.num2 = num2;
+    }
+    public void show1() {
+        System.out.println("num1"+"+"+"num2"+"="+(num1+num2));
+    }
+    public void show2() {
+        System.out.println("num1"+"-"+"num2"+"="+(num1-num2));
+    }
+    public void show3() {
+        System.out.println("num1"+"*"+"num2"+"="+num1*num2);
+    }
+    public void show4() {
+        System.out.println("num1"+"/"+"num2"+"="+num1/num2);
+    }
+}
+public class Sep23 {
+    public static void main(String[] args) {
+        Calculator calculator=new Calculator();
+        calculator.setNum2(5);
+        calculator.setNum1(10);
+        calculator.show1();
+        calculator.show2();
+        calculator.show3();
+        calculator.show4();
+    }
+}
+
