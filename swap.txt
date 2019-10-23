@@ -1,0 +1,22 @@
+import java.util.Scanner;
+class Variable {
+    public int a;
+    public int b;
+    public void swap() {
+        a=a^b;
+        b=a^b;
+        a=a^b;
+        System.out.println(a);
+        System.out.println(b);
+    }
+}
+public class Sep23 {
+    public static void main(String[] args) {
+        Variable v=new Variable();
+        Scanner in=new Scanner(System.in);
+        System.out.println("enter two numbers:");
+        v.a=in.nextInt();
+        v.b=in.nextInt();
+        v.swap();
+    }
+}
