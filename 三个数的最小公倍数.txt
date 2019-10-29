@@ -1,0 +1,38 @@
+
+问题描述
+
+已知一个正整数N，问从1~N中任选出三个数，他们的最小公倍数最大可以为多少。
+输入格式
+
+输入一个正整数N。
+输出格式
+输出一个整数，表示你找到的最小公倍数。
+样例输入
+9
+样例输出
+504//三个数的最小公倍数
+//public class Main {
+//	public static void fun(long n) {
+//		long max=0;
+//		if(n<=2) {//不符合题意
+//			return;
+//		}
+//		if(n%2==1) {
+//			max=n*(n-1)*(n-2);
+//		}else {
+//			if (n%3==0) {
+//				max=(n-1)*(n-2)*(n-3);	
+//			}else {
+//				max=(n-1)*(n-3)*n;
+//			}
+//		}
+//		System.out.println(max);
+//	}
+//	public static void main(String []args) {
+//		Scanner inScanner=new Scanner(System.in);
+//		long n=inScanner.nextLong();
+//		fun(n);
+//		
+//	}
+//	
+//}
