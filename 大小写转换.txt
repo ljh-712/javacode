@@ -1,0 +1,34 @@
+//　编写一个程序，输入一个字符串（长度不超过20），然后把这个字符串内的每一个字符进行大小写变换，即将大写字母变成小写，小写字母变成大写，然后把这个新的字符串输出。
+import java.util.Scanner;
+public class Main {
+	public static void main (String[] args) {
+		Scanner inScanner=new Scanner(System.in);
+		String str=inScanner.nextLine();
+		for (int i = 0; i < str.length(); i++) {
+			int a=(int)str.charAt(i);
+			if (a>97) {
+				System.out.print((char)(a-32));	
+			}
+			if (a<=97&&a>=65) {
+				System.out.print((char)(a+32));		
+			}
+			
+		}
+	}
+}
+//
+import java.util.Scanner;
+public class Main {
+	public static void main (String[] args) {
+		Scanner inScanner=new Scanner(System.in);
+		String str=inScanner.nextLine();
+		for (int i = 0; i < str.length(); i++) {
+			if(str.substring(i, i+1).equals(str.substring(i, i+1).toLowerCase())){
+				System.out.print(str.substring(i, i+1).toUpperCase());
+			}else{
+				System.out.print(str.substring(i, i+1).toLowerCase());
+			}
+
+		}
+	}
+}
