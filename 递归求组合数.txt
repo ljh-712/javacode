@@ -1,0 +1,17 @@
+public class Main {
+	public static int fun(int k,int n) {
+		if(k==0||k==n) {
+			return 1;
+		}else {
+			 return fun(k,n-1)+fun(k-1, n-1);
+			
+		}
+	}
+	public static void main(String []args) {
+		Scanner inputScanner=new Scanner(System.in);
+		int k=inputScanner.nextInt();
+		int n=inputScanner.nextInt();
+		System.out.println(fun(k, n));
+		
+	}
+}
