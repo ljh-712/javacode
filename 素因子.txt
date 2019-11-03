@@ -1,0 +1,42 @@
+//求素因子
+public class Main{
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        int n=in.nextInt();
+        for(int i=2;i*i<n;i++) {
+            while(n%i==0) {
+                System.out.print(i+" ");
+                n=n/i;
+            }
+        }
+        if(n!=1) {
+            System.out.print(n);
+        }
+
+    }
+}
+//素因子去重
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Long n = sc.nextLong();
+        int flag = 0;
+        Long t = n;
+        Long res = 1L;
+        for(int i = 2; i <= t / 2; i++){
+            while(n % i == 0){
+                n /= i;
+                flag = 1;
+            }
+            if(flag == 1) {
+                res *= i;
+            }
+            if(n < i)
+                break;
+            flag = 0;
+        }
+        System.out.println(res * n);
+        sc.close();
+    }
+}
