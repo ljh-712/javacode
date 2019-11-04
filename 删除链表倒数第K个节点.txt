@@ -1,0 +1,32 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+//定义一个虚拟节点，让他的next指向head,然后定义两个引用，让第一个引用先走n步，然后他两一起走，当第一个引用的next为空时。说明此时第二个引用的next就是要删的数，
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+         if(n<1||head==null) {
+            return head;
+        }
+        ListNode node=new ListNode(-1);
+        node.next=head;
+        ListNode fast=node;
+        ListNode slow=node;
+       
+        while(n>0) {
+            n--;
+            fast=fast.next;
+        }
+        while(fast.next!=null){
+            fast=fast.next;
+            slow=slow.next;    
+        }
+        slow.next=slow.next.next;
+        return node.next;      
+        
+    }
+}
