@@ -1,0 +1,15 @@
+public class Main {
+public static void main(String[]args) {
+    Scanner in = new Scanner(System.in);
+    int a = in.nextInt();
+    int b = in.nextInt();
+    int c = in.nextInt();
+
+    for (int i = 1; i <= a * b * c; i++)
+        if (i % a == 0 && i % b == 0 && i % c == 0) {
+            System.out.println(i);
+            break;
+        }
+
+    }
+}
