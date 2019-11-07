@@ -1,0 +1,19 @@
+public class Main {
+//	    public static void main(String[] args) {
+//	        Scanner sca=new Scanner(System.in);
+//	        int n;
+//	        long number=1;
+//	         
+//	        n=sca.nextInt();
+//	        for(int i=n;i>=1;i--) {
+//	            number=number*i;
+//	            while(number%10==0) {
+//	                number=number/10;    
+//	            }
+//	        //取后面三位
+//	            //number=number%1000;//加上这个就满分了。
+//	        }
+//	        System.out.println(number%10);
+//	    }
+//	 
+//	}
