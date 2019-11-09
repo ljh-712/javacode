@@ -1,0 +1,206 @@
+/**
+ * @author :Administrator.
+ * @date :2019/11/7 0007
+ * @time:20:20
+ */
+class DListNode {
+    public int val;
+    public DListNode pre;
+    public DListNode next;
+
+    public DListNode(int val) {
+        this.val=val;
+    }
+}
+class DoubleList {
+    public DListNode head = null;
+    public DListNode last = null;//指向链表的尾巴
+/*
+头插法
+ */
+    public void addFist(int val) {
+        DListNode node=new DListNode(val);
+        if(this.head==null) {
+              this.head=node;
+              this.last=node;
+        }else {
+            node.next=this.head;
+            this.head.pre=node;
+            this.head=node;
+        }
+    }
+    /*
+    尾插法
+     */
+    public void addLast(int val) {
+        DListNode node=new DListNode(val);
+
+        if(this.head==null) {
+            this.head=node;
+            this.last=node;
+        }else {
+            this.last.next=node;
+            node.pre=this.last;
+            this.last=node;
+
+        }
+
+    }
+    /*
+    求长度
+     */
+    public int getLength() {
+        DListNode cur=this.head;
+        int count=0;
+        while(cur.next!=null) {
+            cur=cur.next;
+            count++;
+        }
+        return count;
+    }
+    /*
+    任意位置插入，数据节点为零号下标
+     */
+    private DListNode searchIndex(int index) {
+        if(index<0||index>getLength()) {
+            System.out.println("index不合法");
+            return null;
+        }
+        DListNode cur=this.head;
+        while(index>0){
+            cur=cur.next;
+            index--;
+        }
+        return cur;
+    }
+    public void addIndex(int index,int val) {
+
+        if(index==0) {
+            addFist(val);
+            return;
+        }
+        if(index==getLength()) {
+            addLast(val);
+            return;
+        }
+        DListNode cur=searchIndex(index);
+        if(cur==null) {
+            return;
+        }
+        DListNode node=new DListNode(val);
+        node.next=cur;
+        cur.pre.next=node;
+        node.pre=cur.pre;
+        cur.pre=node;
+    }
+    /*
+    查找是否包含关键字key是否在单链表当中
+     */
+    public boolean contains(int val) {
+        DListNode cur=this.head;
+        while(cur!=null) {
+            if(cur.next.val==val) {
+                return true;
+            }
+            cur=cur.next;
+        }
+        return  false;
+    }
+    /*
+ 删除第一次出现关键字为key的节点并返回这个节点
+     */
+    public int remove(int val) {
+        int oldval=-1;
+        DListNode cur=this.head;
+        while(cur!=null) {
+            if(cur.val==val) {
+                oldval=cur.val;
+                if(head==cur) {
+                head=head.next;
+                this.head.pre=null;
+                return  oldval;
+            }else {
+                    cur.pre.next=cur.next;
+                    if(cur!=this.last) {
+                        cur.next.pre=cur.pre;
+                    }else {
+                        this.last=cur.pre;
+                    }
+                    return  oldval;
+                }
+            }
+            cur=cur.next;
+        }
+        return -1;
+    }
+    public void removeall(int val) {
+        int oldval=-1;
+        DListNode cur=this.head;
+        while(cur!=null) {
+            if(cur.val==val) {
+                oldval=cur.val;
+                if(head==cur) {
+                    head=head.next;
+                    this.head.pre=null;
+
+                }else {
+                    cur.pre.next=cur.next;
+                    if(cur!=this.last) {
+                        cur.next.pre=cur.pre;
+                    }else {
+                        this.last=cur.pre;
+                    }
+
+                }
+            }
+            cur=cur.next;
+        }
+}
+    public void show() {
+        DListNode cur=this.head;
+        while(cur!=null) {
+            System.out.print(cur.val+" ");
+            cur=cur.next;
+        }
+        System.out.println();
+    }
+    /*
+    清空链表
+     */
+    public void clear() {
+
+        while(this.head!=null) {
+            DListNode cur=this.head;
+            this.head.next=null;
+            this.head.pre=null;
+            this.head=cur;
+        }
+        this.last=null;
+    }
+}
+public class Test2 {
+    public static void main(String[] args) {
+        DoubleList list=new DoubleList();
+        list.addLast(16);
+        list.addLast(15);
+        list.addLast(13);
+        list.addLast(13);
+        list.addLast(13);
+        list.show();
+        System.out.println("bbb");
+        list.clear();
+        System.out.println("bbb");
+
+//        list.addIndex(4,1);
+//        list.show();
+//        System.out.println(list.remove(1));
+//        list.remove(1);
+//        list.show();
+//        list.removeall(13);
+//        list.show();
+
+
+
+
+    }
+}
