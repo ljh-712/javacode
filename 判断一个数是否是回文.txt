@@ -1,0 +1,21 @@
+public class Train {
+    public  static boolean isPalindrome(int x) {
+        if(x<0) {
+            return false;
+        }
+        int t=0;
+        int f=x;
+        while(f!=0) {
+            t=t*10+f%10;
+            f=f/10;
+        }
+        if(t==x) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static void main(String[] args) {
+        System.out.println(isPalindrome(1256));
+    }
+}
