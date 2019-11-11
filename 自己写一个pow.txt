@@ -1,0 +1,18 @@
+//    public static double myPow(double x,double n) {
+//        if(x>=100||x<=-100) {
+//            return 0;
+//        }
+//        if(x==0||n==0) {
+//           return 1;
+//        }
+//        if(n<0){
+//            return 1/x*myPow(1/x,-n-1);
+//        }
+//        return x*myPow(x,n-1);
+//    }
+//
+//    public static void main(String[] args) {
+//        System.out.println(myPow(2,10));
+//
+//    }
+//}
