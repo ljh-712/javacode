@@ -1,0 +1,105 @@
+继承
+
+is-a
+
+    子类获得父类除构造方法外的所有东西（属性和方法或者重新定义、追加属性和方法等。）
+    作用：实现代码复用
+
+//基本语法
+class 子类 extends 父类 {   
+}
+
+    1
+    2
+    3
+
+    父类又称基类，超类
+    子类又称派生类
+    子类拥有父类的特征，而父类没有，父类更通用，子类更具体，（特征包括属性和方法，自身的特性，拥有父类没有的）
+    基类只能访问自己的成员/方法，子类可以访问基类的，因为它继承了基类
+    java是单继承，只能继承一个类
+    父类中public，protected修饰的属性，方法可以继承，private修饰的属性和方法不能被继承
+    如果父类的属性均为private修饰，则可以通过共有的getter，setter方法来调用
+
+class Animal {//父类
+    private String name;
+    private String sex;
+
+    public Animal(String name, String sex) {
+        this.name = name;
+        this.sex = sex;
+    }
+    public void eat(String food) {
+        System.out.println("eat");
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
+}
+class Cat extends Animal {
+    public int age;
+//Cat继承Animal类后，Cat在定义时就不用在写name,sex字段和eat方法
+    public Cat(String name,String sex){
+    //使用 super 调用父类的构造方法
+        super(name,sex);
+    }
+
+    public Cat(String name, String sex, int age) {
+        super(name, sex);
+        this.age = age;
+    }
+
+    public void mie() {
+        System.out.println("mie");
+    }
+
+}
+
+
+
+关于public、private、default、protect修饰字段和方法的权限的比较
+
+    public，公共的，即类内部和类的调用者都能访问
+    private,私有的，只能在类内部访问
+    protect,保护的，类内部、子类、同一个包的类可以访问，其他的不行
+    default,默认的，也叫包访问权限，同一个包的类可以访问，其他的类不能访问
+    在这里插入图片描述
+
+组合:也可以实现代码的复用性
+has-a
+
+public class Student {     ... } 
+ 
+public class Teacher {     ... } 
+ 
+public class School {   
+ 我们可以理解成一个学校中 "包含" 若干学生和教师  
+	public Student[] students;     
+	public Teacher[] teachers; 
+}
+
+    public class Student {     ... } 
+ 
+public class Teacher {     ... } 
+ 
+public class School {   
+ 我们可以理解成一个学校中 "包含" 若干学生和教师  
+	public Student[] students;     
+	public Teacher[] teachers; 
+}
+
+
+final关键字
+
+    1、final可以修饰成员变量、方法、属性、类
+    2、修饰类时不能被继承
+    3、修饰方法时不能被子类的方法重写
+    3、修饰局部变量
+    final int a=10;//修饰普通局部变量，放在栈上 a=10;//报错，不可重新赋值
+    public static final int SIZE=10;//静态的常量，属于类本身，只有一份，不可更改
+    4、修饰引用类型变量只能保证其地址不会改变，
