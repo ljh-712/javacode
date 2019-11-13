@@ -1,0 +1,241 @@
+# **多态**
+
+>1、何为多态？
+>字面意思就是同一个实体具有多种形式。
+
+## 1、**向上转型**
+
+>将子类的值赋给父类
+>三种形式：直接赋值 、方法传参、 方法返回
+
+
+
+
+
+
+**（1）直接赋值**
+>将子类的值赋给父类
+
+```java
+class Animal  {
+    public String name;
+    public String sex;
+
+    public Animal(String name, String sex) {
+        this.name = name;
+        this.sex = sex;
+    }
+
+    public void eat(String food) {
+        System.out.println("eat");
+    }
+}
+class Bird extends Animal{
+    public Bird(String name, String sex) {
+        super(name, sex);
+    }
+    public void fly() {
+        System.out.println(this.name+this.sex+"fly()");
+    }
+}
+public class Nov13 {
+    public static void main(String[] args) {
+     Animal animal=new Bird("xiaoling","femal");//向上转型，也就是说将子类的值赋给父类
+     animal.eat("food")；
+     
+      Animal animal=new Animal("00","nan");
+        animal.fly();//  error,此时会报错，因为父类不能调用子类的方法
+    }
+
+}
+```
+***动态绑定***
+>程序在编译时调用的的父类的方法，运行的却是子类的方法（此时发生了重写)
+>==重写：也叫覆盖，方法名相同，参数列表相同，返回值相同==
+>==重写的方法不能是private，子类方法的权限一定要大于父类方法的权限，而且重写的方法不能是静态的==
+
+ - 重载和重写的区别.
+ ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191114001934368.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNTUyMzMx,size_16,color_FFFFFF,t_70)
+
+```java
+class Animal  {
+    public String name;
+    public String sex;
+
+    public Animal(String name, String sex) {
+        this.name = name;
+        this.sex = sex;
+    }
+
+    public void eat() {
+        System.out.println("animaleat");
+    }
+}
+class Bird extends Animal{
+    public Bird(String name, String sex) {
+        super(name, sex);
+    }
+    public void eat() {
+        System.out.println("birdeat");
+    }
+    public void fly() {
+        System.out.println(this.name+this.sex+"fly()");
+    }
+}
+public class Nov13 {
+    public static void main(String[] args) {
+    Animal animal1 = new Animal("圆圆","m");
+    animal1.eat();
+    Animal animal2 = new Bird("扁扁","s"
+    animal2.eat();
+    }
+}
+```
+![此时](https://img-blog.csdnimg.cn/20191113234801282.png)根据运行结果，你会发现，animal1和animal2都是Animal类型的引用，但animal1指向Animal的实例，而animal2指向Bird的实例，针对 animal1 和 animal2 分别调用 eat 方法, 发现 animal1.eat() 实际调用了父类的方法, 而 animal2.eat() 实际调用了子类的方法。
+>==因此, 在 Java 中, 调用某个类的方法, 究竟执行了哪段代码 (是父类方法的代码还是子类方法的代码) , 要看究竟这个引 用指向的是父类对象还是子类对象. 这个过程是程序运行时决定的(而不是编译期), 因此称为 动态绑定.==
+**(2)、方法传参**
+
+```java
+public static void food(Animal animal) {
+        animal.eat();
+    }
+    public static void main(String[] args) {
+        Bird bird=new Bird("tiaotiao","male");
+        food(bird);
+```
+此时形参 animal 的类型是 Animal (基类), 实际上对应到 Bird (父类) 的实例
+**（3）、方法返回**
+
+```java
+ public static void main(String[] args) {     
+        Animal animal = findMyAnimal();
+        animal.eat();   
+     } 
+ 
+    public static Animal findMyAnimal() {     
+        Bird bird = new Bird("圆圆","male");
+        return bird;    
+     }  
+```
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20191114003401981.png)
+此时方法 findMyAnimal 返回的是一个 Animal 类型的引用, 但是实际上对应到 Bird 的实例.
+
+## 2、向下转型
+>向下转型就是父类对象转成子类对象
+
+```java
+// Animal.java public class Animal {  
+   protected String name; 
+   public Animal(String name) {    
+         this.name = name;   
+    } 
+
+    public void eat(String food) {    
+    System.out.println("我是一只小动物");                                        
+    System.out.println(this.name + "正在吃" + food);    
+    } 
+} 
+ 
+// Bird.java public class Bird extends Animal {   
+  public Bird(String name) {     
+      super(name);    
+   } 
+ 
+  public void eat(String food) {    
+  System.out.println("我是一只小鸟");      
+  System.out.println(this.name + "正在吃" + food);   
+   }         
+   public void fly() {    
+    System.out.println(this.name + "正在飞");     
+    }
+ }
+ public class Nov13 { 
+     public static void main(String[] args) {
+         Animal animal = new Bird("圆圆");
+         animal.eat("谷子");
+         }
+ }
+```
+
+## 3、 super
+>super 表示获取到父类实例的引用
+>1、 使用了 super 来调用父类的构造器
+
+```java
+public Bird(String name) {   
+  super(name); 
+  }
+```
+
+>2、 使用了 super 来调用父类的普通方法
+
+```java
+public class Bird extends Animal {
+     public Bird(String name) {
+            super(name);
+     } 
+ 
+    @Override     
+    public void eat(String food) {         
+    // 修改代码, 让子调用父类的接口.          
+    super.eat(food);         
+    System.out.println("我是一只小鸟");         
+    System.out.println(this.name + "正在吃" + food);     
+    } 
+ } 
+```
+
+## 4、多态的好处
+>1) 类调用者对类的使用成本进一步降低. 封装是让类的调用者不需要知道类的实现细节. 多态能让类的调用者连这个类的类型是什么都不必知道, 只需要知道这个对象具有某个方法即可. 
+
+```java
+class Shape {     
+	public void draw() {         // 啥都不用干    
+ 	} 
+ } 
+ 
+class Cycle extends Shape {    
+ @Override     
+ 	public void draw() {         
+ 	System.out.println("○");     
+ 	} 
+ } 
+ 
+class Rect extends Shape {     
+@Override     
+	public void draw() {        
+	 System.out.println("□"); 比特科技
+    } 
+} 
+ 
+class Flower extends Shape {    
+ @Override     
+ public void draw() {        
+  	System.out.println("?");    
+  	 } 
+ } 
+ 
+/////////////////////////////我是分割线////////////////////// 
+ 
+// Test.java public class Test {     
+public static void main(String[] args) {         
+	Shape shape1 = new Flower();        
+ 	Shape shape2 = new Cycle();         
+ 	Shape shape3 = new Rect();         
+ 	drawMap(shape1);         
+ 	drawMap(shape2);         
+ 	drawMap(shape3);     
+ }  // 打印单个图形    
+  public static void drawShape(Shape shape) {         
+  shape.draw();     
+  	} 
+  }
+  在这个代码中, 分割线上方的代码是 类的实现者 编写的, 
+  分割线下方的代码是 类的调用者 编写的. 
+  当类的调用者在编写 drawMap 这个方法的时候, 参数类型为 Shape (父类), 
+  此时在该方法内部并不知道, 
+  也不关注当 前的 shape 引用指向的是哪个类型(哪个子类)的实例. 
+  此时 shape 这个引用调用 draw 方法
+  可能会有多种不同的表现 (和 shape 对应的实例相关), 这种行为就称为 多态. 
+```
+
