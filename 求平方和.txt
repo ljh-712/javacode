@@ -1,0 +1,27 @@
+public class Train {
+    public static boolean fun(int n) {
+        int count=0;
+        while(n!=0) {
+            if(n%10==0||n%10==2||n%10==1||n%10==9) {
+                return true;
+            }
+            n=n/10;
+        }
+        return false;
+
+    }
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        long sum=0;
+        int n=in.nextInt();
+        //System.out.println(fun(n));
+
+        for(int i=1;i<=n;i++) {
+            if (fun(i)) {
+                sum = sum + i*i;
+            }
+        }
+        System.out.println(sum);
+    }
+
+}
