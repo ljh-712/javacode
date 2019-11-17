@@ -1,0 +1,52 @@
+public static void show(int [][]a,int m,int n) {
+        int count = 0;
+        int r = 0, c = 0;
+        final int up = 1;
+        final int down = -1;
+        final int left = 2;
+        final int right = -2;
+        int dir = right;/*开始方向*/
+        int cir = 1;/* 第几圈赋值 */
+        while (true) {
+            count++;
+            a[r][c] = count;/*赋值*/
+            switch (dir) {
+                case right:
+                    if (c < n - cir) {/*当前行右方还有没赋值的*/
+                        c++;
+                    } else {
+                        dir = down;
+                        r++;
+                    }
+                    break;
+                case down:
+                    if (r < m - cir) {/*当前列下方还有没赋值的*/
+                        r++;
+                    } else {
+                        dir = left;
+                        c--;
+                    }
+                    break;
+                case left:
+                    if (c > cir - 1) {/*当前行左边还有没赋值的*/
+                        c--;
+                    } else {
+                        dir = up;
+                        r--;
+                    }
+                    break;
+                case up:
+                    if (r > cir) {/*当前列上边边还有没赋值的*/
+                        r--;
+                    } else {
+                        cir++;/*赋值了一圈*/
+                        dir = right;
+                        c++;
+                    }
+                    break;
+            }
+            if (count >= m * n) {
+                break;
+            }
+        }
+    }
