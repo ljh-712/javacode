@@ -1,0 +1,46 @@
+public static int [] fun(int []arr,int sum) {
+    int left=0;
+    int right=arr.length-1;
+    //int total=(arr[left] + arr[right]);
+    while(left<right) {
+        if (arr[left] + arr[right]>sum) {
+            right--;
+        }else if (arr[left] + arr[right]<sum) {
+            left++;
+        }else {
+            int a=arr[right];
+            int b=arr[left];
+            return new int[]{b,a};
+        }
+    }
+    return null ;
+}
+```
+
+```java
+    public ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+
+    ArrayList<Integer> list = new ArrayList<>();
+        if (array == null || array.length == 0)
+            return list;
+        int left = 0;
+        int right = array.length - 1;
+        while (left < right) {
+            //int total = array[left] + array[right];
+            if (array[left] + array[right] == sum) {
+                list.add(array[left]);
+                list.add(array[right]);
+                return list;
+            } else if (array[left] + array[right]> sum) {
+              //大于sum，说明太大了，right左移寻找更小的数
+                --right;
+                  
+            } else {
+              //2.如果和小于sum，说明太小了，left右移寻找更大的数
+                ++left;
+            }
+        }
+        return list;
+    
+    }   
+}
