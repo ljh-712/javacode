@@ -1,0 +1,12 @@
+public class Main {
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        while (m != 0 && n != 0) nums1[m + n - 1] = nums1[m - 1] > nums2[n - 1] ? nums1[--m] : nums2[--n];
+        while (n != 0) nums1[m + n - 1] = nums2[--n];
+    }
+    public static void main(String[] args) {
+    int []arr1={1,5,6,0,0,0};
+    int arr2[]={2,7,8};
+        merge(arr1,3,arr2,3);
+        System.out.println(Arrays.toString(arr1));
+    }
+}
