@@ -1,0 +1,52 @@
+/小明有一块空地， 他将这块空地划分为n行m列的小块，每行和每列的长度都为1o
+小明选了其中的一些小块空地，种上了草，其他小块仍然保持是空地。
+这些草长得很快，每个月， 草都会向外长出一些，如果一个小块种了草，则它将向自己的上，下、 左、右四小块空地扩展，这四小块空地都将变为有草的小块。
+请告诉小明，k个月后空地上哪些地方有草。输入格式
+输入的第一行包含两个整数m
+接下来n行，每行包含m个字母，表示初始的空地状态，字母之间没有空格。如果为小数点，表示为空地，如果字母为g，表示种了草。
+接下来包含一个整数文输出格式
+输出n行，每行包含个字母，表示k个月后空地的状态。如果为小数点，表示为空地，如果字母为g表示长了草/
+public static void main1(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n=in.nextInt();
+        int m=in.nextInt();
+        char[][] ch=new char[n+2][m+2];
+        for(int i=1; i<=n; i++)
+        {
+            String str=in.next();
+            for (int j = 1; j <=m ; j++) {
+                ch[i][j]=str.charAt(j-1);
+            }
+        }
+        int k=in.nextInt();
+        while(k>0) {
+            for (int i = 1; i <=n; i++) {
+                for (int j = 1; j <=m; j++) {
+                    if (ch[i][j] == 'g') {
+                        if (ch[i - 1][j] != 'g')
+                            ch[i - 1][j] = 'f';
+                        if (ch[i + 1][j] != 'g')
+                            ch[i + 1][j] = 'f';
+                        if (ch[i][j - 1] != 'g')
+                            ch[i][j - 1] = 'f';
+                        if (ch[i][j + 1] != 'g')
+                            ch[i][j + 1] = 'f';
+                    }
+                }
+            }
+            for (int i = 1; i <=n; i++) {
+                for (int j = 1; j <=m ; j++) {
+                    if (ch[i][j] =='f' ) {
+                        ch[i][j]='g';
+                    }
+                }
+            }
+            k--;
+        }
+        for (int i = 1; i <=n; i++) {
+            for (int j = 1; j <=m; j++) {
+                System.out.print(ch[i][j]+"");
+            }
+            System.out.println();
+        }
+    }
