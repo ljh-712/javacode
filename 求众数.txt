@@ -1,0 +1,10 @@
+public class Main {
+    public static int majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        return nums[nums.length/2];
+    }
+    public static void main(String[] args) {
+        int arr[]={2,44,5,66,66,66,6,2,2,7,7,7,7};
+        System.out.print(majorityElement(arr));
+    }
+}
