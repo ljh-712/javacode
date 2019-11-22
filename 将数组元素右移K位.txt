@@ -1,0 +1,38 @@
+public class Main {
+    public static void reverse1(int[] arr) {
+        int left=0;
+        int right=arr.length-1;
+        while(left<right){
+            int temp=arr[left];
+            arr[left]=arr[right];
+            arr[right]=temp;
+            left++;
+            right--;
+        }
+    }
+    public static void reverse2(int[] arr) {
+        int left=1;
+        int right=arr.length-1;
+        while(left<right){
+            int temp=arr[left];
+            arr[left]=arr[right];
+            arr[right]=temp;
+            left++;
+            right--;
+        }
+
+    }
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        int []arr={1,2,3,4,5};
+        int k=in.nextInt();
+        while(k>0) {
+            reverse1(arr);
+            reverse2(arr);
+            k--;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]+" ");
+        }
+    }
+}
