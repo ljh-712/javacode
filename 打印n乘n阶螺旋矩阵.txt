@@ -1,0 +1,32 @@
+public static int[][]  generateMatrix1(int n) {
+        int arr[][]=new int[n][n];
+        int left=0;//左
+        int right=n-1;//右
+        int top=0;//上
+        int bottom=n-1;//下
+        int count=1;
+        while(count<=n*n) {
+            for (int i = left; i <=right; i++) {//从左到右
+                arr[top][i] = count++;
+            }
+            top++;
+            for (int i = top; i <=bottom ; i++) {//从上到下
+                arr[i][right] = count++;
+
+            }
+            right--;
+            for (int i = right; i >=left ; i--) {//从右到左
+                arr[bottom][i] = count++;
+
+            }
+            bottom--;
+            for (int i = bottom; i >=top ; i--) {//从下到上
+                arr[i][left] = count++;
+
+            }
+            left++;
+        }
+        return arr;
+
+
+    }
