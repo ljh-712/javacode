@@ -1,0 +1,25 @@
+给定一个字符串 S，返回 “反转后的” 字符串，其中不是字母的字符都保留在原地，而所有字母的位置发生反转。
+示例 1：
+
+输入："ab-cd"
+输出："dc-ba"
+   public static String reverseOnlyLetters(String S) {
+        char[] arrray = S.toCharArray();
+        int i = 0;
+        int j = arrray.length - 1;
+        while (i < j) {
+            while (i < j && !Character.isLetter(arrray[i])) {
+                i++;
+            }
+            while (i < j && !Character.isLetter(arrray[j])) {//Character.isLetter()确定指定的字符是否是一个字母。
+                j--;
+            }
+            char t = arrray[i];
+            arrray[i] = arrray[j];
+            arrray[j] = t;
+            i++;
+            j--;
+        }
+        return String.valueOf(arrray);//String.valueOf返回char数组参数的字符串char形式。
+        // 字符数组的内容被复制; 字符数组的后续修改不会影响返回的字符串
+    }
