@@ -1,0 +1,34 @@
+private static boolean isPrime(int num) {
+        if (num == 1) {
+            return false;
+
+        }
+        for (int i = 2; i <=Math.sqrt(num) ; i++) {
+            if (num%i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private static boolean isDig(int num) {
+        String s=Integer.toString(num);
+        for (int i = 0; i <s.length()/2 ; i++) {
+            if (s.charAt(i) != s.charAt(s.length()-i-1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public static int fun(int m,int n) {
+        int count=0;
+        for (int i = m; i <=n ; i++) {
+            if (isPrime(i)&&isDig(i)) {
+                count++;
+
+            }
+
+        }
+        return count;
+    }
