@@ -1,0 +1,49 @@
+输入
+
+i am a student
+输出
+
+i ma a tneduts
+
+//第一种方法
+import java.util.Scanner;
+public class Main {
+     public static String reverse(String str) {
+        char[] dest=str.toCharArray();
+        int left=0;
+        int right=dest.length-1;
+        while(left<right) {
+            char t=dest[left];
+            dest[left]=dest[right];
+            dest[right]=t;
+            left++;
+            right--;
+        }
+        //return String.copyValueOf(dest);
+        return new String(dest);
+    }
+
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        String s=in.nextLine();
+        String [] r=s.split(" ");
+        for (String x:r) {
+            System.out.print(reverse(x)+" ");
+
+        }
+    }
+}
+
+//第二种方法
+
+ public static void main11(String[] args) {
+        Scanner in=new Scanner(System.in);
+        String s=in.nextLine();
+        String [] r=s.split(" ");
+        for(String x: r) {
+
+            System.out.print(new StringBuffer(x).reverse()+" ");
+        }
+
+
+    }
