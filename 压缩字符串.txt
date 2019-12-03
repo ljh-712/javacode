@@ -1,0 +1,31 @@
+对字符串进行RLE压缩，将相邻的相同字符，用计数值和字符值来代替。例如：aaabccccccddeee，则可用3a1b6c2d3e来代替
+import java.util.Arrays;
+import java.util.Scanner;
+public class Main {
+    public static String zipString3(String iniString) {
+         if(iniString==null||iniString.length()==0){
+                return "";
+            }
+            StringBuilder strB = new StringBuilder("");
+            char[] iniStr = iniString.toCharArray();
+            char pre=iniStr[0];
+
+            int count = 1;
+            for(int i = 1;i < iniStr.length; i++){
+                if(pre == iniStr[i]){
+                    count++;
+                }else{
+                    strB.append(""+count+pre);
+                    pre = iniStr[i];
+                    count = 1;
+                }
+            }
+            strB.append(""+count+pre);
+            return new String(strB);
+        }
+     public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        String s=in.next();
+        System.out.println(zipString3(s));
+    }
+}
