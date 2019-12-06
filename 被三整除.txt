@@ -1,0 +1,29 @@
+public class Main1202 {
+    public static int divide(int l,int r){
+        int count = 0;
+        int intl = 0;
+        StringBuilder sbl = new StringBuilder("");
+        StringBuilder sbr = new StringBuilder("");
+        for(int i = 1; i <= r ; i++){//1-5
+            if(i < l ){//1-L
+                sbl.append(i);
+                //  System.out.println("l=="+sbl);
+            }
+            if(i >= l){
+                sbr = sbl;
+                sbr.append(i);
+                intl = Integer.parseInt(sbl.toString());
+                //   System.out.println("r=="+intl);
+                if(intl % 3 == 0 )
+                    count ++ ;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+         System.out.println(
+        divide(2,5)
+        );
+    }
+}
