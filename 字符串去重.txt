@@ -1,0 +1,29 @@
+public class Main4 {
+    public static String remove2(String s) {
+        StringBuffer newStr=new StringBuffer(s);
+        for (int i = 0; i <newStr.toString().length() ; i++) {
+            for (int j = i+1; j <newStr.toString().length() ; j++) {
+                if (newStr.charAt(i) == newStr.charAt(j)) {
+                    newStr.deleteCharAt(j);
+                }
+            }
+        }
+        return newStr.toString();
+    }
+    public static String remove1(String s) {
+        StringBuffer newStr=new StringBuffer();
+        for (int i = 0; i <s.length() ; i++) {
+            char temp=s.charAt(i);
+            if (!newStr.toString().contains(temp+"")) {
+                newStr.append(temp);
+            }
+        }
+        return newStr.toString();
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        String str=sc.nextLine();
+
+        System.out.println(remove2(str));
+    }
+}
