@@ -1,0 +1,34 @@
+一、数据库的优点
+1、便于查询（检索）
+2、便于管理
+3、便于管理控制
+4、进行安全控制（权限控制）
+二、数据库的分类
+1、关系型数据库（RDBMS）》》Relational Data Base Management System
+由表（组成）。表是有属性的（attribute）(列(colum)又叫，属性字段(field))、有时表也叫关系
+Oracle、Sqlsever，Mysql、
+
+2、非关系型数据库
+—##SQL结构化查询语言
+三、数据库安装和配置
+net start mysql启动数据库
+1、mysql -u root -p
+-代表选项   p:password
+
+2、show databases;
+
+3、对比mysql_hom   data 目录
+[mysqld]//服务器端
+
+create table(
+name varchar,
+number int;
+
+)
+services.msc  查询服务
+三、—##SQL结构化查询语言
+1、、DDL数据定义语言，用来维护存储数据的结构 
+代表指令: create, drop, alter 
+2、、DML数据操纵语言，用来对数据进行操作 代表指令： insert，delete，update 
+3、、DML中又单独分了一个DQL，数据查询语言，代表指令： select DCL数据控制语言，主要负责权限管理和事务 代表指令： grant，revoke，commit
+数据库作用：方便管理、
