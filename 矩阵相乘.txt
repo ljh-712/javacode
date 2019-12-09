@@ -1,0 +1,42 @@
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int m=sc.nextInt();
+        int s=sc.nextInt();
+        int n=sc.nextInt();
+        int arr[][]=new int[m][s];
+        int arr2[][]=new int[s][n];
+        int ret[][]=new int[m][n];
+        for (int i = 0; i <m ; i++) {
+            for (int j = 0; j < s; j++) {
+                arr[i][j]=sc.nextInt();
+            }
+
+        }
+        for (int i = 0; i <s ; i++) {
+            for (int j = 0; j < n; j++) {
+                arr2[i][j]=sc.nextInt();
+            }
+
+        }
+        for (int i= 0; i <m ; i++) {
+            for (int j = 0; j < n; j++) {
+                ret[i][j]=0;
+                for (int k = 0; k <s ; k++) {
+                    ret[i][j]+=arr[i][k]*arr2[k][j];
+
+                }
+            }
+
+            
+        }
+        for (int i= 0; i <m ; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(ret[i][j]+" ");
+
+            }System.out.println();
+
+        }
+    }
+}
