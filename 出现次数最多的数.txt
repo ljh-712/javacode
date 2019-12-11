@@ -1,0 +1,42 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2019/12/11 0011
+ * @time:21:03
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        if (n < 1||n>20) {
+           System.exit(0);
+
+        }
+        int[] arr=new int[n];
+        for (int i = 0; i <arr.length ; i++) {
+            arr[i] = sc.nextInt();
+        }
+           // System.out.println();
+            int mt=1;//记录数据出现的最大次数
+            int flag=1;//表示当前数据出现的次数
+            int key=arr[0];
+            for (int j = 1; j <arr.length ; j++) {
+                if (arr[j]==arr[j-1]) {
+                    flag++;
+                }
+                else {
+                    flag=1;
+                }
+                if (flag > mt) {
+                    mt=flag;
+                    key=arr[j];
+                }
+
+
+            }
+        System.out.println(key);
+
+
+    }
