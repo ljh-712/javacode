@@ -1,0 +1,82 @@
+异常
+1、异常的分类
+    1、Throwable是所有异常的父类，派生出了两个子类Error、Exception.
+    2、Error指的是java运行时内部错误和资源耗尽，应用程序不抛出此类异常。
+    3、Exception是我们所使用异常的父类
+    4、Java语言规范将派生于 Error 类或 RuntimeException 类的所有异常称为 非受查异常, 所有的其他异常称为 受查 异常.受查异常必须显示处理
+    5、继承自 Exception 的异常默认是受查异常 。继承自 RuntimeException 的异常默认是非受查异常。
+2、异常的基本用法
+
+  1、捕获异常
+
+    try{
+    有可能出现异常的语句 ;
+    }
+    catch (异常类型 异常对象) { } …
+    finally { 异常的出口 }
+
+ try {
+            System.out.println(1/0);
+
+        }catch (ArithmeticException e) {
+        System.out.println("这是个零做除数的异常");
+        //打印出现异常的调用栈
+            e.printStackTrace();
+        }
+        finally {
+            System.out.println("0");
+        }
+        
+
+
+   2、注意事项
+
+    ①try 代码块中放的是可能出现异常的代码. catch 代码块中放的是出现异常后的处理行为. ?nally 代码块中的代码用于处理善后工作, 会在最后执行. 其中 catch 和 ?nally 都可以根据情况选择加或者不加
+
+    ②一旦 try 中出现异常, 那么 try 代码块中的程序就不会继续执行, 而是交给 catch 中的代码来执行. catch 执 行完毕会继续往下执行.
+
+
+    ③ catch 只能处理对应种类的异常
+
+    本来是数组越界异常，却让其处理空指针异常 catch 语句不能捕获到刚才的空指针异常. 因为异常类型不匹配.
+
+    ④catch可以有多个
+
+    一段代码可能会抛出多种不同的异常, 不同的异常有不同的处理方式. 因此可以搭配多个 catch 代码块. 如果多个异常的处理方式是完全相同, 也可以写成这样
+
+
+    ⑤finally表示最后的善后工作，如释放资源
+    无论是否存在异常, ?nally 中的代码一定都会执行到. 保证最终一定会执行到 Scanner 的 close 方法
+    (1)如果finally里没有return,(try 或者 catch 中如果有 return 会在这个 return 之前执行 ?nally，先执行finally里的语句，在执行try语句
+
+    （2）如果finally里有return,则只执行finally语句，不执行try，catch里的语句
+   
+    （3）也就是说，不管怎样finally一定会执行
+
+    ⑥如果本方法没有处理异常，那就沿着栈向上传递，如果一直没有合适的处理方法就交给JVM处理。程序就会异常终止(和我们最开始 未使用 try catch 时是一样的).
+
+    ⑦异常处理流程
+    *程序先执行 try 中的代码 如果 try 中的代码出现异常, 就会结束 try 中的代码, 看和 catch 中的异常类型是否匹配. 如果找到匹配的异常类型, 就会执行 catch 中的代码 * 如果没有找到匹配的异常类型, 就会将异常向上传递到上层调用者. * 无论是否找到匹配的异常类型, ?nally 中的代码都会被执行到(在该方法结束之前执行). * 如果上层调用者也没有处理的了异常, 就继续向上传递. 一直到 main 方法也没有合适的代码处理异常, 就会交给 JVM 来进行处理, 此时程序就会异常终止
+
+   2、抛出异常
+
+    throw抛出异常
+ 
+    throws声明的方法表示此方法不处理异常，而是由系统自动将捕获的异常信息抛出给上级调用者
+    `方法名（参数列表） throws 异常类
+
+	 if (y == 0) {        
+ 	throw new ArithmeticException("抛出除 0 异常");    
+ 	 }     
+ 	return x / y;
+ } 
+
+
+`
+3、自定义异常
+
+***自定义异常通常会继承自 Exception 或者 RuntimeException
+
+    自定义异常的时候 需要自己定义一个类时实现 * Exception*
+
+原文链接：https://blog.csdn.net/qq_41552331/article/details/103528426
