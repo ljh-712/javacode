@@ -1,5 +1,5 @@
   /**
-     * ÅĞ¶Ï×Ö·û´®ÊÇ·ñÓĞÏàÍ¬ÔªËØ
+     * åˆ¤æ–­å­—ç¬¦ä¸²æ˜¯å¦æœ‰ç›¸åŒå…ƒç´ 
      */
     public static boolean containsDuplicate2(String str) {
         char[] arr=str.toCharArray();
@@ -22,8 +22,8 @@
         }
         return true;
     }
-    /**ÅĞ¶ÏÊı×éÊÇ·ñÓĞÏàÍ¬ÔªËØ
-     * Èç¹û´æÔÚÖØ¸´ÔªËØÅÅĞòºóÓ¦¸ÃÏàÁÚ
+    /**åˆ¤æ–­æ•°ç»„æ˜¯å¦æœ‰ç›¸åŒå…ƒç´ 
+     * å¦‚æœå­˜åœ¨é‡å¤å…ƒç´ æ’åºååº”è¯¥ç›¸é‚»
      */
     public static boolean containsDuplicate(int[] nums) {
 
