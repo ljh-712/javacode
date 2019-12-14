@@ -1,0 +1,39 @@
+    /**
+     * 判断字符串是否有相同元素
+     */
+    public static boolean containsDuplicate2(String str) {
+        char[] arr=str.toCharArray();
+        Arrays.sort(arr);
+        for (int i = 1; i <arr.length ; i++) {
+            if (arr[i] == arr[i-1]) {
+                return true;
+
+            }
+
+        }
+        return false;
+    }
+    public static boolean containsDuplicate1(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (str.indexOf(str.charAt(i),i+1)!=-1) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+    /**判断数组是否有相同元素
+     * 如果存在重复元素排序后应该相邻
+     */
+    public static boolean containsDuplicate(int[] nums) {
+
+        Arrays.sort(nums);
+        for (int i = 1; i <nums.length ; i++) {
+            if (nums[i] == nums[i-1]) {
+                return true;
+            }
+
+        }
+        return false;
+
+    }
