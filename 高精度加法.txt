@@ -1,0 +1,49 @@
+import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        boolean high=false;
+        int[] arr1=new int[1000];
+        int[] arr2=new int[1000];
+        int[] arr3=new int[1000];
+        String s1=in.next();
+        String s2=in.next();
+        int key=0;//表示进位
+        for (int i = 0; i <arr1.length ; i++) {
+            arr1[i]=0;
+            arr2[i]=0;
+            arr3[i]=0;
+        }
+        for (int i = 0; i <s1.length() ; i++) {
+            arr1[i] = s1.charAt(s1.length() - i - 1) - 48;
+        }
+        for (int i = 0; i <s2.length() ; i++) {
+            arr2[i]=s2.charAt(s2.length()-i-1)-48;//字符串在数组里逆序存放
+        }
+        for (int i = 0; i <1000; i++) {
+            int t=arr1[i]+arr2[i]+key;
+            arr3[i]=t%10;
+            key=t/10;
+        }
+        if (key != 0) {
+            arr3[1000]=key;//达到最高位时，将进位看为最高位
+        }
+        for (int i = arr3.length-1; i >=0 ; i--) {//逆序输出数组结果
+            if (arr3[i]==0&&i==0)
+            {
+                System.out.println(0);
+                break;
+            }
+
+            if (high) {
+                System.out.print(arr3[i]);
+                continue;
+            }
+            if(arr3[i - 1] != 0) {
+                high = true;
+            }
+        }
+
+    }
