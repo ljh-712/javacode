@@ -1,4 +1,4 @@
-    /**
+  /**
      * 判断字符串是否有相同元素
      */
     public static boolean containsDuplicate2(String str) {
