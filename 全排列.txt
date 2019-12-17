@@ -1,0 +1,61 @@
+  /**
+     * 输出字母序列的全排列
+     * @param s
+     * @param from
+     * @param to
+     */
+    public static void permutation(char[] s,int from,int to) {
+        if (to<=1){
+            return;
+        }
+        if (from == to) {
+            System.out.println(s);
+
+        }else {
+            for (int i = from; i <=to ; i++) {
+                swap(s,i,from);
+                permutation(s,from+1,to);
+                swap(s,from,i);
+
+            }
+        }
+    }
+    public static void swap(char[] s,int i,int j) {
+        char t=s[i];
+        s[i]=s[j];
+        s[j]=t;
+    }
+    public static void main15(String[] args) {
+        char [] arr={'a','b','c','d'};
+        permutation(arr,0,3);
+    }
+    /**
+     * 全排列
+     */
+    static int[] value=new int[11];
+    static int count=0;
+    static boolean[] flag=new boolean[11];
+    public static void dfs(int n,int pos) {//pos代表当前位置
+
+        if (n<pos) {//递归结束，pose超过n的位置
+            for (int i = 1; i <=n ; i++) {
+                System.out.print(value[i]);
+
+            }
+            System.out.println();
+            count++;
+
+        }
+        //System.out.println(++count);
+        for (int i = 1; i <=n ; i++) {
+            if (!flag[i]) {
+                //说明该位置没有被使用
+                value[pos]=i;
+                flag[i]=true;//标记当前位置
+                dfs(n,pos+1);
+                flag[i]=false;
+            }
+
+        }
+
+    }
