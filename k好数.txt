@@ -1,0 +1,44 @@
+  /**
+     * 第K大数
+     * @param args
+     */
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int arr[] = new int[n];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = sc.nextInt();
+        }
+        int time = sc.nextInt();//指定询问个数
+        for (int i = 0; i < time; i++) {
+            int start = sc.nextInt();
+            int end = sc.nextInt();
+            int k = sc.nextInt();
+            //输入起始位置、结束位置、指定索引元素
+            int temp[] = new int[end-start+1];
+            int index=0;
+            //将指定范围元素赋给新的数组
+            for (int j = start-1; j <= end-1; j++) {
+                temp[index++]=arr[j];
+            }
+            Arrays.sort(temp);//对该数组进行排序
+            int downsort[] = new int[temp.length];
+            int index2 = temp.length-1;
+            //将排好序的数组按倒序方式赋给下一个新的数组
+            for (int j = 0; j < downsort.length; j++) {
+                downsort[j]=temp[index2--];
+            }
+//            //
+//            sort(temp);//对该数组进行排序
+//            int downsort[] = new int[temp.length];
+//            int index2 = 0;
+//            //将排好序的数组按倒序方式赋给下一个新的数组
+//            for (int j = 0; j < temp.length; j++) {
+//                downsort[j]=temp[index2++];
+//            }
+            //输出新数组指定索引位置元素
+
+
+            System.out.println(downsort[k-1]);
+        }
+    }
