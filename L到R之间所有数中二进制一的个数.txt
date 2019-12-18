@@ -1,0 +1,23 @@
+/**
+     * 一的个数
+     */
+    public static int sumOne(int n) {
+        int count=0;
+        while(n>0) {
+            n=n&(n-1);
+            count++;
+        }
+
+        return count;
+    }
+
+    public static void main18(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int sum=0;
+        int l=sc.nextInt();
+        int r=sc.nextInt();
+        for (int i=l;i<=r;i++) {
+             sum=sum+sumOne(i);
+        }
+        System.out.println(sum);
+    }
