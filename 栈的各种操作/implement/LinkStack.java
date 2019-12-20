@@ -71,6 +71,6 @@ public class LinkStack<T> implements Stack<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return currentSize==0;
     }
 }
