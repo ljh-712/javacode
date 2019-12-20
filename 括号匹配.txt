@@ -1,0 +1,87 @@
+一、 题目： 给定一个只包括 ‘(’，’)’，’{’，’}’，’[’，’]’ 的字符串，判断字符串是否有效。 有效字符串需满足： 左括号必须用相同类型的右括号闭合。 左括号必须以正确的顺序闭合。 注意空字符串可被认为是有效字符串
+二、分析
+
+    ①我们可以使用栈用一个栈来保存(，[,{
+    当遍历到这三个字符的时候，就将其保存到栈中。
+    如果遍历到的是)就从栈中弹出一个元素，检查是否能跟)配对
+    如果遍历到的是]就从栈中弹出一个元素，检查是否能跟]配对
+    如果遍历到的是}就从栈中弹出一个元素，检查是否能跟}配对
+    ②或者将字符串转化为数组，遍历数组，如果遇到’（ ‘，‘[’’{‘将‘）’’]’’}'压栈,检查遍历的字符是否与站弹出的元素匹配
+
+三、代码实现
+
+class Solution {
+    public boolean isValid(String s) {
+                char[] data = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for (char x : data) {
+            //碰到左括号入栈
+            if (x == '{' || x == '[' || x == '(') {
+                stack.push(x);
+            } else {
+                if (stack.isEmpty()) {//如果给出的都是右括号，栈里没元素，pop就会出现空指针异常，所以要先判空
+                    return false;
+                } else if (x == '}') {
+                    char temp = stack.peek();
+                    if (temp == '{') {
+                        stack.pop();
+                        continue;
+                    } else
+                        return false;
+                }else if (x == ']') {
+                    char temp = stack.peek();
+                    if (temp == '[') {
+                        stack.pop();
+                        continue;
+                    } else
+                        return false;
+                }else if (x == ')') {
+                    char temp = stack.peek();
+                    if (temp == '(') {
+                        stack.pop();
+                        continue;
+                    } else
+                        return false;
+                }
+            }
+        }
+                
+        if (stack.isEmpty()) {
+            return true;
+        }
+        return false;
+    }        
+}
+
+   
+
+class Solution {
+    public boolean isValid(String s) {
+        char[] data = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for(char c:data) {
+            if(c=='{') {
+                stack.push('}');
+            }else if(c=='(') {
+                stack.push(')');
+
+            }else if(c=='[') {
+                stack.push(']');
+            }
+            else if(stack.isEmpty()||stack.pop()!=c) {
+                return false;
+            }
+        }
+        if(stack.isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+        
+    
+}
+
+————————————————
+版权声明：本文为CSDN博主「鹿鸣hh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/103638747
