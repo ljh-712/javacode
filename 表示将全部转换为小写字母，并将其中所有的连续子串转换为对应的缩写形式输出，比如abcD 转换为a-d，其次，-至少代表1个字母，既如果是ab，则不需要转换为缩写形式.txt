@@ -1,0 +1,49 @@
+一、题目描述
+
+    表示将全部转换为小写字母，并将其中所有的连续子串转换为对应的缩写形式输出，比如abcD 转换为a-d，其次，-至少代表1个字母，既如果是ab，则不需要转换为缩写形式
+
+二、输入用例：
+
+输入AaB
+输出：aab
+输入：AabcbCDddfeeefgG
+输出：aa-cb-dddfeee-gg
+输入 ab
+输出：ab
+三、分析
+
+    ①首先将字符串转化为数组，我们考虑使用两个数组一个存放原字符串，一个存放新的字符串。先令两个数组首元素相同。
+    ②判断从第二个字符开始他是否时连续的，如果连续，将第二个数组里放“-”
+    if (i < c.length - 1 && c[i] - 1 == c[i - 1] && c[i] + 1 == c[i + 1]) { t[i] = '-';}
+    如果不连续，将该字符直接放在t[i]里
+    ③遍历数组t,如果如果t[i]!=’-’,将i直接放在一个新的字符串里
+    如果t[i]==’-'并且它的前一个字符不为‘-’，将i直接放在一个字符串里
+
+四、源代码
+
+public static String cutStr(String s) {
+        char[] c = s.toLowerCase().toCharArray();
+        char[] t = new char[c.length];
+        t[0] = c[0];
+        for (int i = 1; i < c.length; i++) {
+            if (i < c.length - 1 && c[i] - 1 == c[i - 1] && c[i] + 1 == c[i + 1]) {
+                t[i] = '-';
+            } else {
+                t[i] = c[i];
+            }
+        }
+
+        StringBuffer a = new StringBuffer();
+        for (char i : t) {
+            if (i == '-' && a.charAt(a.length() - 1) != '-') {
+                a.append('-');
+            } else if (i != '-') {
+                a.append(i);
+            }
+        }
+        return a.toString();
+    }
+
+————————————————
+版权声明：本文为CSDN博主「鹿鸣hh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/103637374
