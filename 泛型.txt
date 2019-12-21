@@ -1,0 +1,88 @@
+泛型   jdk1.5提出的
+1、方法的可变参数：
+①本质是数组，在方法中用...来表示可变参数
+②可变参数必须放在方法形参最后，并且只有一个
+
+2、for-each
+3、静态导入（import）
+①import static....导入所有类的静态域（方法与属性）
+②使用导入类的静态域就像是在本类中的一样
+4、泛型：java语法糖
+在定义时类型不确定，只有具体使用时才能确定类型
+①泛型类
+（1）代码：
+class Myclass<T> {//T代表类型参数,指代任何类型（不包括基本类型8种，要使用其包装类），常用单个大写字母表示，
+    private T t;
+}
+public class Test1 {
+    public static void main(String[] args) {
+        Myclass<String> myclass1=new Myclass<String>();
+        Myclass<Integer> myclass2=new Myclass<Integer>();
+    }
+}
+（2）、泛型类可以接受多个类型参数
+class Mclass<T,E> {
+    private T t;
+    private E e;
+}
+public class Test1 {
+    public static void main(String[] args) {
+        Mclass<String,Integer> mclass=new Mclass<String, Integer>();
+    }
+}
+（3）引入泛型后，一个泛型类的类型在使用时已经确定好，因此无需向下转型
+
+
+②泛型方法：在方法声明时用<T>表示的方法，<T>中的T称为类型参数，而方法中的T被称为参数化类型，他不是运行时真正的参数
+  public <T> void fun(T t) {
+        System.out.println(t);
+    }
+ public <T> T test(T t) { //<T>泛型方法的定义，表示该方法为泛型方法。第二个T表示返回类型是T，第三个T表示参数类型是T.
+        return t;//类型参数也可以做返回值
+    }
+**（1、当泛型类与泛型方法共存时，泛型方法始终与自己定义的类型为准、定义时让泛型类和泛型方法的类型不同名，来避免混淆
+class Myclass2<T> {
+    public <T> T func(T t) {
+        return t;
+    }
+}
+public class Test1 {
+    public static void main(String[] args) {
+        Myclass2<String> myclass2=new Myclass2<>();
+        System.out.println(myclass2.func(12));
+        System.out.println(myclass2.func("123"));
+    }
+}
+输出：12 123
+③泛型接口
+interface ISubject<T> {
+    void fun(T t);
+    
+}
+子类在实现接口时有两种实现方式
+1）此时子类实现接口时就确定类型
+class SujectImpl implements ISubject<String> {
+    @Override
+    public void fun(String s) {
+
+    }
+}
+2）子类实现接口时仍然保留泛型
+
+class SubjectImpl2<T> implements ISubject<T> {
+    @Override
+    public void fun(T t) {
+
+    }
+}
+
+*****类型擦除*******
+jdk 1.5引入\
+泛型只存在于编译阶段，在进入JVM之前，与泛型有关的信息会被完全擦除
+泛型类再进行类型擦除时，未指定泛型的上限，泛型相关信息会被擦除位Object类型，如果有上限，擦除为对应类型的上限。
+class Myclass<T,E extends Number> {
+      public T t;
+      public E e;
+}
+T>>>Object
+E>>>Number
