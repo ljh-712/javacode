@@ -1,0 +1,32 @@
+public class Solution {
+    public static List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> lists=new ArrayList<>();
+        for (int i=0;i<numRows;++i) {//行
+            List<Integer> row=new ArrayList<>();
+            for (int j=0;j<=i;++j) {
+                if (j==0||i==j) {
+                    row.add(1);
+                }else {
+                    row.add(0);
+                }
+                
+
+            }
+
+            lists.add(row);
+
+        }
+        for (int i=2;i<numRows;++i) {
+            List<Integer> cur=lists.get(i);//当前行
+            List<Integer> pre=lists.get(i-1);//前一行
+
+            for (int j=1;j<i;++j) {
+                cur.set(j,pre.get(j)+pre.get(j-1));
+
+            }
+
+        }
+        return lists;
+
+
+    }
