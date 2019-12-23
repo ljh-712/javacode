@@ -1,0 +1,19 @@
+通配符：
+解决的问题：引入泛型后参数类型被确定，方法的参数只能接受一种类型的泛型类
+（1）？通配符。
+用在方法级别，表示泛型上限，指定任意类型的泛型
+ public static void func(Myclass3<?> myclass3)
+该方法只能取得泛型对象中的值，无法通过类似setter方法设置值，因为传入的类型不确定，故无法设置具体值到相应对象中
+①？ extends 类。表示泛型上限，类与方法均可使用。
+类
+class Myclass <T extends Number>
+T必须是Number的子类
+
+方法：
+public void fun(Myclass <? extends Number> myClass){}
+？指代任意类型，但必须传入Number及其子类Myclass对象
+此时方法中依然不能设置值，只能取得值（现在只能确定父类，不能确定子类，此时向下转型存在不确定性，因此无法设置值）
+（2）？ super类。通配符
+表示泛型下限，子类确定好了。只能用在方法级别
+public void fun(Myclass <? super String> myClass){}
+此时方法可以设置值，发生天然的向上转型。
