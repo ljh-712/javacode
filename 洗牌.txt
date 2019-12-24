@@ -1,0 +1,105 @@
+public class Card {
+    private int rank;//牌面值
+    private String suit;//牌的花色
+
+    @Override
+    public String toString() {
+        String strNum = String.format("%d", rank);
+
+        switch(rank)
+        {
+            case 11:
+                strNum = "J";
+                break;
+            case 12:
+                strNum = "Q";
+                break;
+            case 13:
+                strNum = "K";
+                break;
+        }
+
+        return suit + ":" + strNum;
+    }
+
+
+    public Card(int rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+}
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static java.util.Collections.swap;
+
+/**
+ * @author :Administrator.
+ * @date :2019/12/24 0024
+ * @time:23:08
+ */
+ class CreateCard {
+    public static final String[] color = {"?", "?", "?", "?"};//牌的花色
+
+    public  List<Card> buyCard() {//创一副牌
+        List<Card> cards = new ArrayList<>(52);
+        for (int i = 0; i < color.length; i++) {
+            for (int j = 1; j < 14; j++) {
+                Card card = new Card(j, color[i]);
+                cards.add(card);
+            }
+
+        }
+        return cards;
+
+    }
+
+    //洗牌
+    public void shuffle(List<Card> cards) {
+        for (int i = cards.size() - 1; i > 0; i--) {
+            Random random = new Random(20191224);
+            int j = random.nextInt(i);
+            swap(cards, i, j);
+        }
+    }
+}
+public class CardDemo {
+    public static void main(String[] args) {
+        CreateCard cards=new CreateCard();
+        List<Card> c=cards.buyCard();
+
+        cards.shuffle(c);
+        System.out.println(c);
+        System.out.println("=================================================================================================================");
+        List<List<Card>> hands = new ArrayList<>();
+        for(int i = 0; i < 3; ++i)
+            hands.add(new ArrayList<>());
+
+        for(int i = 0; i < 5; ++i){
+            // 3个人一次摸牌
+            for(int j = 0; j < 3; ++j){
+                // 从L中依次获取一张牌---》
+                Card card = c.remove(c.size()-1);
+                // 将该张牌放置到对应人的手中
+                hands.get(j).add(card);
+            }
+        }
+
+        // 打印每个人手中的牌
+        for(int i = 0; i < hands.size(); ++i){
+            System.out.println(hands.get(i));
+        }
+        System.out.println("=========================================================================================================================");
+        // 牌摞摞中剩余什么牌
+        System.out.print("剩余的牌数：");
+        System.out.println(c.size());
+
+        System.out.println(c);
+    }
+
+
+
+}
