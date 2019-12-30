@@ -1,0 +1,12 @@
+//     * 两个二进制相加
+//     * @param args
+//     */
+//    public static void main8(String[] args) {
+//
+//        Scanner in = new Scanner(System.in);
+//        String str1 = in.next();
+//        String str2 = in.next();
+//        int a = Integer.parseInt(str1,2);
+//        int b = Integer.parseInt(str2,2);
+//        System.out.println(Integer.toBinaryString(a+b));
+//    }
