@@ -1,0 +1,104 @@
+## 题目：设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素。
+
+    push(x) -- 将元素 x 推入栈中。
+    pop() -- 删除栈顶的元素。
+    top() -- 获取栈顶元素。
+    getMin() -- 检索栈中的最小元素。
+
+**示例：示例:**
+
+**MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.getMin();   --> 返回 -2.**
+
+## 解法一：双栈解法
+
+```java
+class MinStack {
+   private Stack<Integer> stack;
+   private Stack<Integer> minstack;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack=new Stack<>();
+        minstack=new Stack<>();
+    }
+    
+    public void push(int x) {
+        
+        if(minstack.isEmpty()||minstack.peek()>=x){
+            minstack.push(x);
+        }
+        stack.push(x);
+    }
+    
+    public void pop() {
+        if(minstack.peek().equals(stack.peek())) {
+            minstack.pop();
+        }
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int getMin() {
+        return minstack.peek();
+    }
+}
+
+```
+
+解法二：单栈解法
+
+
+```java
+class MinStack {
+    private Stack<Integer> stack;
+
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack=new Stack<>();
+    }
+    public void push(int x) {
+        if (stack.isEmpty()) {
+            stack.push(x);
+            stack.push(x);
+        } else {
+            
+            int tep=stack.peek();
+            stack.push(x);
+            if (x<tep) {
+                stack.push(x);
+            }
+            else {
+                stack.push(tep);
+            } 
+        }
+    }
+    public void pop() {
+        stack.pop();
+        stack.pop();
+    }
+    public int top() {
+        int tep=stack.pop();
+        int result=stack.peek();
+        stack.push(tep);
+        return result;
+
+    }
+
+    public int getMin() {
+        return stack.peek();
+
+    }
+}
+
+```
+
