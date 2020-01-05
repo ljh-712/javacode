@@ -1,0 +1,169 @@
+## ArrayList基本介绍
+1、Arraylist是一个能够进行扩容的动态数组，但是和数组又不太一样，继承了AbstractList，实现了List、RandomAccess, Cloneable, java.io.Serializable。
+
+```java
+public class ArrayList<E> extends AbstractList<E>
+        implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+```
+
+```java
+>boolean    add(E e)          尾插e
+>void  add(int index,E e)    在index位置插入e
+>boolean addAll(Collection<? extends E> c)   尾插c中的元素
+>E remove(int index)     删除index位置的元素
+>boolean remove(Object o)     删除第一个遇到的o
+>E get(int index)      获取index位置的元素
+>E set(int index,E e)     将index位置设置为e
+>void clear()    清空
+>boolean   contains(Object o)     判断o是否在线性表中
+>int indexOf(Object o)   返回第一个o所在的下标
+>int lastindexOf(Object o)  返回最后一个o所在的下标
+>List<E> subList(int fromIndex,int toIndex)  截取部分List(左闭右开)
+```
+
+2、特点：
+①支持随机访问，
+②任意位置插入和删除的时间复杂度为O(n);
+③插入期间可能需要扩容
+④应用场景：存储，大量的访问元素
+3、常用方法：
+
+4、ArrayList<ArrayList<Integer>>
+：杨辉三角：
+```java
+  public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> lists=new ArrayList<>();
+        for (int i=0;i<numRows;++i) {//行
+            List<Integer> row=new ArrayList<>();
+            for (int j=0;j<=i;++j) {
+                if (j==0||i==j) {
+                    row.add(1);
+                }else {
+                    row.add(0);
+                }
+                
+            }lists.add(row);
+        }
+        for (int i=2;i<numRows;++i) {
+            List<Integer> cur=lists.get(i);//当前行
+            List<Integer> pre=lists.get(i-1);//前一行
+
+            for (int j=1;j<i;++j) {
+                cur.set(j,pre.get(j)+pre.get(j-1)); 
+            } 
+        }
+        return lists;
+```
+洗牌游戏：
+
+```java
+package commenbit.cardshuffle;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+
+
+/**
+ * @author :Administrator.
+ * @date :2019/12/24 0024
+ * @time:23:08
+ */
+ class CreateCard {
+    public static final String[] color = {"?", "?", "?", "?"};//牌的花色
+
+    public  List<Card> buyCard() {//创一副牌
+        List<Card> cards = new ArrayList<>(52);
+        for (int i = 0; i < color.length; i++) {
+            for (int j = 1; j < 14; j++) {
+                Card card = new Card(j, color[i]);
+                cards.add(card);
+            }
+
+        }
+        return cards;
+
+    }
+
+    //洗牌,从后往前依次取牌，获取一个0到i的随机数，将i和j的位置交换。
+    public void shuffle(List<Card> cards) {
+        for (int i = cards.size() - 1; i > 0; i--) {
+            Random random = new Random(20190105);
+            int j = random.nextInt(i);
+            swap(cards, i, j);
+        }
+    }
+
+    private void swap(List<Card> cards, int i, int j){
+        Card temp = cards.get(i);
+        cards.set(i, cards.get(j));
+        cards.set(j, temp);
+    }
+}
+public class CardDemo {
+    public static void main(String[] args) {
+        CreateCard cards=new CreateCard();
+        List<Card> c=cards.buyCard();
+        System.out.println("刚买回来的牌");
+        System.out.println(c);
+        cards.shuffle(c);
+        System.out.println("洗牌：");
+        System.out.println(c);
+        System.out.println("=================================================================================================================");
+        List<List<Card>> hands = new ArrayList<>();
+        for(int i = 0; i < 3; ++i)
+            hands.add(new ArrayList<>());
+
+        for(int i = 0; i < 5; ++i){
+            // 3个人一次摸牌
+            for(int j = 0; j < 3; ++j){
+                // 从L中依次获取一张牌---》
+                Card card = c.remove(c.size()-1);
+                // 将该张牌放置到对应人的手中
+                hands.get(j).add(card);
+            }
+        }
+        // 打印每个人手中的牌
+        for(int i = 0; i < hands.size(); ++i){
+            System.out.println("每个人的牌：");
+            System.out.println(hands.get(i));
+        }
+        System.out.println("=========================================================================================================================");
+        // 牌摞摞中剩余什么牌
+        System.out.print("剩余的牌数：");
+        System.out.println(c.size());
+
+        System.out.println(c);
+    }
+}
+
+```
+
+## LinkedList基本介绍
+
+```java
+public class LinkedList<E>
+    extends AbstractSequentialList<E>
+    implements List<E>, Deque<E>, Cloneable, java.io.Serializable
+```
+1、LinkedList是链式结构，底层是一个双向链表，且头节点中不存放数据。应用于任意位置大量的插入删除数据
+2、支持任意位置插入删除数据，时间复杂度为O(1);
+
+## 关于空间利用率问题
+1、如果单纯的看里面存储元素，ArrayList空间利用率较高，因为LinkedList它的一个节点不止放数据，还有它的pre,next域来维护节点之间的连接。
+2、如果从插入数据来看，如果插入数据较多，ArrayList需要扩容，此时他俩就不好比较了
+
+## 关于ArrayList和LinkedList的区别
+>、ArrayList和LinkedList都是实现了List接口的容器类，用于存储一系列的对象引用。他们都可以对元素的增删改查进行操作。
+
+>2、对于ArrayList，它在集合的末尾删除或添加元素所用的时间是一致的，但是在中间的部分添加或删除时所用时间就会大大增加。但是它在根据索引查找元素的时候速度很快。
+3、对于LinkedList则相反，它在插入、删除集合中任何位置的元素所花费的时间都是一样的，但是它根据索引查询一个元素的时候却比较慢。
+
+>ArrayList和LinkedList的大致==区别==：
+.ArrayList是实现了基于动态数组的数据结构，LinkedList是基于链表结构。 2.对于随机访问的get和set方法，ArrayList要优于LinkedList，因为LinkedList要移动指针。 3.对于新增和删除操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。
+
+>他们在==性能上的优缺点==：
+1.对ArrayList和LinkedList而言，在列表末尾增加一个元素所花的开销都是固定的。对 ArrayList而言，主要是在内部数组中增加一项，指向所添加的元素，偶尔可能会导致对数组重新进行分配；而对LinkedList而言，这个开销是 统一的，分配一个内部Entry对象。 2.在ArrayList集合中添加或者删除一个元素时，当前的列表所所有的元素都会被移动。而LinkedList集合中添加或者删除一个元素的开销是固定的。 3.LinkedList集合不支持 高效的随机随机访问（RandomAccess），因为可能产生二次项的行为(访问链表中的链表，可能需要先遍历一次链表)。 4.ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容量空间，而LinkedList的空间花费则体现在它的每一个元素都需要消耗相当的空间
+所以在我们进行对元素的增删查操作的时候，进行查操作时用ArrayList，进行增删操作的时候最好用LinkedList。
+
