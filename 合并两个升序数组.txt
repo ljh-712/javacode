@@ -1,0 +1,51 @@
+import java.util.Arrays;
+import java.util.Scanner;
+public class Main {
+   public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String s1 = in.next();
+       if (!in.hasNext()) {
+            System.out.println(s1);
+            return;
+        }
+        String s2 = in.next();
+        String[] st1 = s1.split(",");
+        String[] st2 = s2.split(",");
+        int len1 = st1.length;
+        int len2 = st2.length;
+        int[] arr1 = new int[len1];
+        int[] arr2 = new int[len2];
+ 
+        for (int i = 0; i < len1; i++) {
+            arr1[i] = Integer.parseInt(st1[i]);
+ 
+        }
+        for (int i = 0; i < len2; i++) {
+            arr2[i] = Integer.parseInt(st2[i]);
+ 
+        }
+        int[] dest = new int[len1 + len2];
+        int left1 = 0;
+        int left2 = 0;
+        int left = 0;
+        for (left = 0; left < len1 + len2; left++) {
+            if (left1 ==len1) {
+                dest[left] = arr2[left2];
+                left2++;
+            } else if (left2 == len2) {
+                dest[left] = arr1[left1];
+                left1++;
+            } else if (arr1[left1] < arr2[left2]) {
+                dest[left] = arr1[left1];
+                left1++;
+            } else {
+                dest[left] = arr2[left2];
+                left2++;
+            }
+        }
+        for (int i = 0; i < len1 + len2 - 1; i++) {
+            System.out.print(dest[i] + ",");
+        }
+        System.out.print(dest[len1 + len2 - 1]);
+    }
+}
