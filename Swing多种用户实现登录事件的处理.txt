@@ -1,0 +1,54 @@
+/**
+	 * 登录事件处理
+	 */
+	private void login() {
+		String userName=this.userNameTxt.getText();//界面输入用户名
+		String password=this.passwordTxt.getText();//界面输入密码
+		String userType="";//单选框的值
+		if(studentRbt.isSelected()) {
+			userType="student";
+		}else if(teacherRbt.isSelected()) {
+			userType="teacher";
+		}
+		if(StringUtil.isEmpty(userName)) {
+			JOptionPane.showMessageDialog(null, "用户名不能为空");
+			return;
+		}
+		if(StringUtil.isEmpty(password)) {
+			JOptionPane.showMessageDialog(null, "密码不能为空");
+			return;
+		}
+		
+		User user=new User(userName,password,userType);
+		Connection con=null;
+		try {
+			con=dbUtil.getConnection();
+			User currentUser=userDao.login(con, user);
+			if(currentUser!=null) {
+				dispose();//销毁当前窗体
+				if(userType.equals("student")) {
+					new StudentMainFrame().setVisible(true);
+				}else {
+					new TeacherMainFrame().setVisible(true);
+				}
+				
+				
+			}else {
+				JOptionPane.showMessageDialog(null,"用户名或密码或者用户类型错误错误");
+			}
+			
+				
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				dbUtil.closeConnection(con);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
