@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="OrderMeal/src"/>
+	<classpathentry kind="lib" path="OrderMeal/lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="OrderMeal/lib/swing-layout-1.0.3.jar"/>
+	<classpathentry kind="lib" path="out/production/OrderMeal/mysql-connector-java-3.1.12-bin.jar"/>
+	<classpathentry kind="lib" path="D:/瑾槿的云文档/比特课/MySQL课件/mysql-connector-java-5.1.47.jar"/>
+	<classpathentry kind="output" path="OrderMeal/bin"/>
+</classpath>
