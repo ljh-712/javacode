@@ -1,0 +1,47 @@
+﻿前端三剑客：html:超文本标记语言
+            cs:静态网页
+			javaScript:动态交互
+ 一个html页面基本组成：html:根标记
+						head:头标记    用于描述性的信息，不在页面显示 
+						body:体标记    写页面显示的信息
+						h1--h6         是标题标记
+						align="center"  居中显示   "left/right"
+						<a href="http://www.baidu.com"></a>   超链接   href：可以指定任意链接
+						table 表格<table></table>  :<tr><tr>行
+													<td><td/>普通列   <th></th>标题列、自带居中和加粗的效果
+													border="1px"  align="center" width="60%"加边框，居中，
+													cellspacing="0px"设置表格与表格之间的空隙
+						<form action="提交的地址" method="提交方式（"get"/"post"）">
+						用户名称：<input type="text" userName="" value="Admin"/></form>表单操作，收集用户信息提交后台提交形式userName=value	
+						<br/>   换行
+						
+ <html>
+	<head> </head>
+	<body> 
+		<h1 align="center"></h1>
+		<h2></h2>
+		<h3></h3>
+		<h4></h4>
+		<h5></h5>
+		<h6></h6>
+		<a href="http://www.baidu.com">呦呦</a>
+		<table border="1px"  align="center" width="60%" cellspacing="0px">
+			<tr>
+				<th>员工id</th>
+				<th>员工名</th>
+				<th>性别</th>
+				<th>员工描述</th>
+			</tr>
+			<tr align="center">
+				<td>1001</td>
+				<td>鹿鸣</td>
+				<td>男</td>
+				<td>呦呦</td>
+			</tr>
+			
+		</table>
+		<form action="提交的地址" method="get/post">
+			用户名称：<input type="text" userName="" value="Admin"/>   <-- type代表输入类型 -->
+		</form>	
+	</body>
+ </html>
