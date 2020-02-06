@@ -1,0 +1,165 @@
+package com.at.luming;
+
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/2/6 0006
+ * @time:18:49
+ */
+public class Cale {
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+
+        while(true) {
+            System.out.println();
+            menu();
+            //System.out.println();
+            int choose=in.nextInt();
+            if (choose == 0) {
+                System.exit(0);
+            }else if (choose==1) {
+                main1();
+            }else if (choose==2) {
+                main2();
+            }else {
+                System.out.println("输入错误，重新输入");
+            }
+        }
+    }
+    private static void menu() {
+        System.out.println("*****************************************************");
+        System.out.println("请选择：");
+        System.out.println("1:输入当前年月，比如2020 1，以回车键结束打印当前月的日历");
+        System.out.println("2:输入当前年，比如2020 以回车键结束打印当前年的日历");
+        System.out.println("0：退出");
+        System.out.println("*****************************************************");
+
+    }
+    /**
+     * 判断平闰年
+     * @param year
+     * @return
+     */
+
+    private static boolean isLeapyear(int year) {
+        return ((year % 4 == 0)&&(year % 100 != 0))||year % 400 == 0;
+    }
+
+    /**
+     * 获取该年前一年到1900年的总天数
+     * @param year
+     * @return
+     */
+    private static int getTotalFromLastyear(int year){
+        int totalDays = 0;
+        for(int i = 1900; i< year; i++){//i:年份
+            totalDays += isLeapyear(i) ? 366 : 365;
+        }
+        return totalDays;
+    }
+
+    /**
+     * 获取每个月的天数
+     * @param month
+     * @param year
+     * @return
+     */
+    private static int getNowMonth(int year,int month) {
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12: return 31;
+            case 2:return isLeapyear(year)?29:28;
+            case 4:
+            case 6:
+            case 9:
+            case 11: return 30;
+            default:return 0;
+        }
+    }
+    /**
+     * 获取该月前一月到1月的总天数
+     * @param month
+     * @return
+     */
+    private static int getTotalFromLastmonth(int year,int month){
+        int totalDays = 0;
+        for(int i=1;i< month;i++){//i:月份
+            totalDays += getNowMonth(year,i);
+        }
+        return totalDays;
+    }
+
+    private static void print(int week,int year,int month) {
+        int cnt = 0;//计数器，记录空白数和日期数的和
+        //1) 打印表头
+        System.out.println("Sun\t\tMon\t\tTue\t\tWed\t\tThr\t\tFri\t\tSat");
+        //2）打印空白（观察星期与之前空个数之间的规律）
+        for(int i=1;i<= week;i++){
+            System.out.print("\t\t");
+            cnt++;
+        }
+        //3) 打印日历
+        for(int i=1;i<=getNowMonth(year, month);i++) {
+            System.out.print(i + "\t\t");
+            cnt++;
+            //若记录空白数和日期数的和是七的倍数，应该换行输出
+            if (cnt % 7 == 0) {
+                System.out.println();
+            }
+        }
+    }
+
+    public static void main1() {
+        Scanner input=new Scanner(System.in);
+        //2、从控制台接收用户录入的年份、月份
+        System.out.println("输入年和月:");
+
+        int year  = input.nextInt();
+
+        int month  = input.nextInt();
+
+        //3、获得1900年距离当前年份上一年的总天数
+        int totalDays = getTotalFromLastyear(year);
+
+        //4、获得当前年份所经过的天数
+        int totalDaysThisYear = getTotalFromLastmonth(year,month);
+        //5、求得给定月份第一天的星期数
+        int week = (totalDays + totalDaysThisYear +1) % 7;//星期日是，week = 0
+
+        //6、格式化输出日历
+        print(week,year,month);
+    }
+
+    public static void main2() {
+        Scanner input=new Scanner(System.in);
+        //2、从控制台接收用户录入的年份、月份
+        System.out.println("输入年:");
+        int year  = input.nextInt();
+
+        for (int i = 1; i <=13 ; i++) {
+            int totalDays = getTotalFromLastyear(year);
+
+            //获得当前年份所经过的天数
+            int totalDaysThisYear = getTotalFromLastmonth(year,i);
+            //求得给定月份第一天的星期数
+            int week = (totalDays + totalDaysThisYear +1) % 7;//星期日是，week = 0
+            //System.out.println(totalDays+totalDaysThisYear);
+            //格式化输出日历
+            if(i<13) {
+                System.out.println("*******"+i+"月"+"*******");
+                print(week,year,i);
+                System.out.println();
+            }
+
+        }
+        //3、获得1900年距离当前年份上一年的总天数
+
+    }
+
+}
