@@ -1,0 +1,141 @@
+## 一、题目描述
+Josephu问题为: 设编号为1, 2，... n的n个人围坐-一圈，约定编号为k (1<=k<=n)的人从1开始报数，数到m的那个人出列，它的下一位又从1开始报数，数到m的那个人又出列，依次类推，直到所有人出列为止，由此产生一个出队编号的序列。
+
+
+## 二、解题思路：
+**1、循环单链表：**
+构造一个循环无头结点单链表，假设有K个节点，从一开始计数，数到m时对应节点从链表中删除，依次下去，直到最后一个节点从链表中删除。
+
+```java
+class BoyNode {
+    public int val;
+    public BoyNode next;
+
+    public BoyNode(int val) {
+        this.val = val;
+    }
+}
+class LinkedList {
+    public BoyNode head;
+
+    public LinkedList() {
+        this.head = null;
+    }
+    //构造一个循环单链表
+    public void add(int nums) {
+        if(nums<1) {
+            System.out.println("nums的值不正确");
+            return;
+        }
+        BoyNode cur=null;
+        for (int i = 1; i <=nums ; i++) {
+               BoyNode newNode=new BoyNode(i);
+               if(i==1) {
+                   head=newNode;
+                   newNode.next=newNode;
+                   cur=head;
+               }else {
+                   cur.next=newNode;
+                   newNode.next=head;
+                   cur=newNode;
+               }
+        }
+    }
+    //遍历环形链表
+    public void show() {
+        if(head==null) {
+            System.out.println("没有任何小孩");
+            return;
+        }
+        BoyNode cur=this.head;
+        while(true) {
+            System.out.println(cur.val);
+            if(cur.next==head) {
+                break;
+            }
+            cur=cur.next;
+
+        }
+    }
+
+    /**
+     * 输出小孩出圈的顺序
+     * @param startVal
+     *         起始小孩的编号
+     * @param key
+     *       表示数几下
+     * @param nums
+     *        小孩子的个数
+     */
+    public void countBoy(int startVal,int key,int nums) {
+        if(startVal<1||startVal>nums||head==null) {
+            System.out.println("参数输入错误");
+            return;
+        }
+        BoyNode pre=head;
+
+        while(true) {
+            if (pre.next==head) {
+                break;
+            }
+            pre=pre.next;
+        }
+        //报数前，先让head,pre先移动startVal-1次
+        for (int i = 0; i <startVal-1 ; i++) {
+            head=head.next;
+            pre=pre.next;
+        }
+        //报数时，先让pre,head同时一定key-1次，此时，head指向的节点就是要出圈的节点
+        while(true) {
+            if (pre==head) {
+                break;
+            }
+            for (int j = 0; j < key-1; j++) {
+                head=head.next;
+                pre=pre.next;
+            }
+            System.out.println("出圈号："+head.val);
+            head=head.next;
+            pre.next=head;
+        }
+        System.out.println("最后留着圈内的号"+head.val);
+    }
+}
+public class JosefProblem {
+    public static void main(String[] args) {
+       LinkedList linkedList=new LinkedList();
+       linkedList.add(5);
+       linkedList.show();
+       linkedList.countBoy(1,3,5);
+
+    }
+}
+
+```
+2、队列实现
+队列的特性是先进先出，故我们可以先初始化一个队列，然后如果报号%n==0;
+出队，不为零的话，让它出队后加入原队列队尾
+
+```java
+public class JosefProblems {
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        Queue<Integer> queue=new LinkedList<Integer>();
+        int m=in.nextInt();
+        int n=in.nextInt();
+        for (int i = 1; i <=m ; i++) {
+            queue.add(i);
+        }
+        int k=0;
+        while(queue.size()!=0) {
+            if(++k%n!=0) {
+                queue.add(queue.remove());
+
+            }else  {
+                System.out.println("出队编号："+queue.remove());
+            }
+        }
+    }
+}
+```
+
