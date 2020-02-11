@@ -1,0 +1,374 @@
+## 一、前缀表达式
+**1、运算符在前，操作数在后的表达式**
+**2、前缀表达式的计算机求值**
+从右至左扫描表达式，遇到数字时，将数字压入堆栈，遇到运算符时，弹出栈顶的两个数，用运算符对它们做相应的计算(栈顶元素和次顶元素)，并将结果入栈;重复上述过程直到表达式最左端，最后运算得出的值即为表达式的结果
+
+> 例如: (3+4)X5-6对应的前缀表达式就是-X +3456,针对前缀表达式求值步骤如下: 1)从右至左扫描，将6、5、4、3压入堆栈
+> 2)遇到+运算符，因此弹出3和4 (3为栈顶元素，4为次顶元素)，计算出3+4的值，得7， 再将7入栈
+> 3)接下来是X运算符，因此弹出7和5， 计算出7X 5=35， 将35入栈 4)最后是-运算符，计算出35-6的值，即29，由此得出最终结果
+
+
+## 二、中缀表达式
+
+**1、中缀表达式就是常见的运算表达式，如(3+4)X5-6**
+**2、中缀表达式的求值是我们人最熟悉的，但是对计算机来说却不好操作(前面我们讲的案例就能看的这个问题)，因此，在计算结果时，往往会将中缀表达式转成其它表达式来操作(一般转成后缀表达式)**
+3、中缀表达式求值
+
+```java
+import java.util.Stack;
+/**
+ * 个位数表达式求值
+ * 思路：
+ * 使用栈完成表达式的计算思路
+ * 1.通过一-个index值(索引)，来遍历我们的表达式
+ * 2.如果我们发现是-一个数字，就直接入数栈
+ * 3.如果发现扫描到是一个符号，就分如下情况
+ * 3.1如果发现当前的符号栈为空，就直接入栈
+ * 3.2如果符号栈有操作符，就进行比较,如果当前的操作符的优先级小于或者等于栈中
+ * 的操作符，就需要从数栈中pop出两个数在从符号栈中pop出一一个符号，进行运算，
+ * 将得到结果，入数栈，然后将当前的操作符入符号栈，如果当前的操作符的优先级大
+ * 于栈中的操作符，就直接入符号栈.
+ * 4.当表达式扫描完毕，就顺序的从数栈和符号栈中pop出相应的数和符号，并运行.
+ * 5.最后在数栈只有一个数字,就是表达式的结果
+ */
+public class StackProblemToExpression {
+    public static void main(String[] args) {
+    String expersion="8*4+58";
+    int num1=0;
+    int num2=0;
+    int res=0;
+    String temp="";
+    int index=0;//扫描表达式
+    char oper=0;
+    char ch=' ';//接收扫描来的值
+    Stack<Integer> numStack=new Stack<>();
+    Stack<Character> operStack=new Stack<>();
+    while(true) {
+        //依次得到表达式的每个字符
+        ch=expersion.substring(index,index+1).charAt(0);
+        //先判断是否为字符
+        if (!isOper(ch)) {
+            //如果是数字,多位数
+            //numStack.push(ch - 48);//处理个位简单加减乘除
+            temp=temp+ch;
+            //如果ch是最后一位，直接入栈
+            if(index==expersion.length()-1) {
+                numStack.push(Integer.parseInt(temp));
+            }else {//不是最后一位，则需要扫描下一位看其是否为数字
+                ch=expersion.substring(index+1,index+2).charAt(0);
+                if(isOper(ch)) {
+                    numStack.push(Integer.parseInt(temp));
+                    temp="";
+                }
+
+            }
+
+
+        }else {////先判断运算符栈是否为空
+            if (!operStack.isEmpty()) {
+                if(priority(operStack.peek())>=priority(ch)) {
+                    num1 = numStack.pop();
+                    num2 = numStack.pop();
+                    oper = operStack.pop();
+                    res=cal(num1,num2,oper);
+                    numStack.push(res);
+                    operStack.push(ch);
+                }else {
+                    operStack.push(ch);
+                }
+            }else {
+                operStack.push(ch);
+            }
+        }
+        index++;
+        if(index>=expersion.length()) {
+            break;
+        }
+    }
+
+        while (true) {
+            if(operStack.isEmpty()) {
+                break;
+            }
+            num1 = numStack.pop();
+            num2 = numStack.pop();
+            oper = operStack.pop();
+            res = cal(num1, num2, oper);
+            numStack.push(res);//入栈
+
+        }
+
+        System.out.println(numStack.pop());
+    }
+
+    //判断是否为运算符
+    public static boolean isOper(char ch) {
+        return ch=='+'||ch=='-'||ch=='*'||ch=='/';
+    }
+    //判断运算符优先级
+    public static int priority(char ch) {
+        if (ch=='+'||ch=='-') {
+            return 0;
+        }else if (ch=='*'||ch=='/') {
+            return 1;
+        }else {
+            return -1;
+        }
+    }
+    //计算值
+    public static int cal(int num1,int num2,char oper) {
+        int res=0;
+        switch (oper) {
+            case '+':
+                res=num1+num2;
+                break;
+            case '-':
+                res=num2-num1;
+                break;
+            case '*':
+                res=num1*num2;
+                break;
+            case '/':
+                res=num2/num1;
+                break;
+            default:
+                break;
+        }
+        return res;
+    }
+
+
+}
+
+```
+**3、中缀转后缀**
+
+```java
+ /**
+     * 中缀转后缀
+     * 1)初始化两个栈:运算符栈s1和储存中间结果的栈s2;
+     * 2)从左至右扫描中缀表达式;
+     * 3)遇到操作数时，将其压s2;
+     * 4)遇到运算符时，比较其与s1栈顶运算符的优先级:
+     * 1.如果s1为空，或栈顶运算符为左括号“(”，则直接将此运算符入栈;
+     * 2.否则，若优先级比栈顶运算符的高，也将运算符压入s1;
+     * 3.否则，将s1栈顶的运算符弹出并压入到s2中，再次转到(4-1)与s1中新的栈顶运算符相比较;
+     * 5)遇到括号时:
+     * (1) 如果是左括号“(”，则直接压入s1
+     * (2) 如果是右括号“)”，则依次弹出s1栈顶的运算符，并压入s2， 直到遇到左括号为止，此时将这一 -对括号丢弃.
+     * 6)重复步骤2至5，直到表达式的最右边
+     * 7)将s1中剩余的运算符依次弹出并压入s2
+     * 8)依次弹出s2中的元素并输出，结果的逆序即为中缀表达式对应的后缀表达式
+     */
+    public static List<String> parseSuffix(List<String> list) {
+        //1)初始化两个栈:运算符栈s1和储存中间结果的栈s2;
+        //这里我们用一个线性表代替数栈，因为如果是数栈需要逆序输出，比较麻烦
+        Stack<String> s1=new Stack<>();
+        List<String> s2=new ArrayList<>();
+        for(String ele:list) {
+            //遇到操作数时，将其压s2;
+            if (ele.matches("\\d+")) {
+                s2.add(ele);
+            }else if (ele.equals("(")){
+                s1.push(ele);
+            }else if (ele.equals(")")) {
+                //如果是右括号“)”，则依次弹出s1栈顶的运算符，
+                // 并压入s2， 直到遇到左括号为止，此时将这一 -对括号丢弃.
+                while(!s1.peek().equals("(")) {
+                    s2.add(s1.pop());
+                }
+                s1.pop();
+            }else {
+            //当ele的优先级小于等于s1栈顶元素，将栈顶元素弹出并加入弹到s2;
+                //再次去和s1中的新站顶元素比较
+                while(s1.size()!=0&&Operation.getValue(s1.peek())>=Operation.getValue(ele)) {
+                    s2.add(s1.pop());
+                }
+                s1.push(ele);
+            }
+        }
+        //将s1中剩余的运算符依次弹出并压入s2
+        while(!s1.empty()) {
+            s2.add(s1.pop());
+        }
+        return s2;
+    }
+}
+```
+*//注意完整代码见三*
+
+## 三、后缀表达式
+**1、后缀表达式又称逆波兰表达式，与前缀表达式相似，只是运算符位于操作数之后
+2、中举例说明: (3+4)X5-6 对应的后缀表达式就是34+5 X 6-
+3、后缀表达式求值**
+
+> /**  * 例如: (3+4)X5-6对应的后缀表达式就是34+5 X 6-，针对后缀表达式求值步骤如下:  *
+> 1.从左至右扫描，将3和4压入堆栈; 
+>   2.遇到+运算符，因此弹出4和3 (4 为栈项元素，3为次顶元素)，计算出3+4的值，得7，再将7入栈;  * 
+>   3.将5入栈;  *
+> 4.接下来是X运算符，因此弹出5和7，计算出7X5=35，将35入栈;  *
+>  5.将6入栈;  *
+>   6.最后是-运算符，计算出35-6的值，即29，由此得出最终结果  */
+
+```java
+/**
+ * 例如: (3+4)X5-6对应的后缀表达式就是34+5 X 6-，针对后缀表达式求值步骤如下:
+ * 1.从左至右扫描，将3和4压入堆栈;
+ * 2.遇到+运算符，因此弹出4和3 (4 为栈项元素，3为次顶元素)，计算出3+4的值，得7，再将7入栈;
+ * 3.将5入栈;
+ * 4.接下来是X运算符，因此弹出5和7，计算出7X5=35，将35入栈;
+ * 5.将6入栈;
+ * 6.最后是-运算符，计算出35-6的值，即29，由此得出最终结果
+ */
+public class PolandNotation {
+    public static void main(String[] args) {
+        //定义一个逆波兰表达式,为了方便，逆波兰表达式数字和符号使用空格隔开
+        String suffixExpression="(3+4)*5-6";
+        //将suffixExpression放入ArrayList中
+       //System.out.println(getsuffixExpression(suffixExpression));
+       // List<String> list=getsuffixExpression(suffixExpression);
+        List<String> list1 = toInfixListString(suffixExpression);
+        System.out.println("原中序表达式"+list1);
+        System.out.println("后缀表达式"+parseSuffix(list1));
+        System.out.println("计算结果"+calulate(parseSuffix(list1)));
+
+    }
+    public static List<String> getsuffixExpression(String s) {
+        String[] spilt=s.split(" ");
+        List<String> list=new ArrayList<>();
+        for (String ele:spilt) {
+            list.add(ele);
+        }
+        return list;
+    }
+    public static int calulate(List<String> ls) {
+        Stack<String> stack=new Stack<>();
+        //遍历字符串
+        for(String item:ls) {
+            //使用正则表达式进行匹配
+            if(item.matches("\\d+")) {//匹配的是多位数
+                //入栈
+                stack.push(item);
+            }else {
+                int num1=Integer.parseInt(stack.pop());
+                int num2=Integer.parseInt(stack.pop());
+                int res=0;
+                if(item.equals("+")) {
+                    res=num1+num2;
+                }else if(item.equals("-")) {
+                    res=num2-num1;
+                }else if (item.equals("*")) {
+                    res=num1*num2;
+                }else if (item.equals("/")){
+                    res=num2/num1;
+                }else {
+                    throw new RuntimeException("运算符错误");
+                }
+                stack.push(res+"");
+            }
+        }
+        return Integer.parseInt(stack.pop());
+    }
+    //将中缀表达式转化为List类型，方便操作
+    public static List<String> toInfixListString(String s) {
+        //定义一个list存放中缀表达式的内容
+        List<String> list=new ArrayList<>();
+        int i=0;//遍历字符串
+        String str="";//用于对多位数的拼接
+        char c;//没遍历到一个字符存放到c中
+        do {
+
+            //如果c不是一个数字,需要将他加入list中
+            if ((c = s.charAt(i)) < 48 || (c = s.charAt(i)) > 57) {
+                list.add("" + c);
+                i++;//i需要后移
+            } else {//如果是一个数字，检查其后面的字符是否为数字
+                str = "";
+                while (i < s.length()&& (c = s.charAt(i)) >= 48 && (c = s.charAt(i)) <= 57 ) {
+                    str += c;
+                    i++;
+                }
+                list.add(str);
+            }
+        } while (i < s.length()) ;
+
+        return list;
+    }
+    /**
+     * 中缀转后缀
+     * 1)初始化两个栈:运算符栈s1和储存中间结果的栈s2;
+     * 2)从左至右扫描中缀表达式;
+     * 3)遇到操作数时，将其压s2;
+     * 4)遇到运算符时，比较其与s1栈顶运算符的优先级:
+     * 1.如果s1为空，或栈顶运算符为左括号“(”，则直接将此运算符入栈;
+     * 2.否则，若优先级比栈顶运算符的高，也将运算符压入s1;
+     * 3.否则，将s1栈顶的运算符弹出并压入到s2中，再次转到(4-1)与s1中新的栈顶运算符相比较;
+     * 5)遇到括号时:
+     * (1) 如果是左括号“(”，则直接压入s1
+     * (2) 如果是右括号“)”，则依次弹出s1栈顶的运算符，并压入s2， 直到遇到左括号为止，此时将这一 -对括号丢弃.
+     * 6)重复步骤2至5，直到表达式的最右边
+     * 7)将s1中剩余的运算符依次弹出并压入s2
+     * 8)依次弹出s2中的元素并输出，结果的逆序即为中缀表达式对应的后缀表达式
+     */
+    public static List<String> parseSuffix(List<String> list) {
+        //1)初始化两个栈:运算符栈s1和储存中间结果的栈s2;
+        //这里我们用一个线性表代替数栈，因为如果是数栈需要逆序输出，比较麻烦
+        Stack<String> s1=new Stack<>();
+        List<String> s2=new ArrayList<>();
+        for(String ele:list) {
+            //遇到操作数时，将其压s2;
+            if (ele.matches("\\d+")) {
+                s2.add(ele);
+            }else if (ele.equals("(")){
+                s1.push(ele);
+            }else if (ele.equals(")")) {
+                //如果是右括号“)”，则依次弹出s1栈顶的运算符，
+                // 并压入s2， 直到遇到左括号为止，此时将这一 -对括号丢弃.
+                while(!s1.peek().equals("(")) {
+                    s2.add(s1.pop());
+                }
+                s1.pop();
+            }else {
+            //当ele的优先级小于等于s1栈顶元素，将栈顶元素弹出并加入弹到s2;
+                //再次去和s1中的新站顶元素比较
+                while(s1.size()!=0&&Operation.getValue(s1.peek())>=Operation.getValue(ele)) {
+                    s2.add(s1.pop());
+                }
+                s1.push(ele);
+            }
+        }
+        //将s1中剩余的运算符依次弹出并压入s2
+        while(!s1.empty()) {
+            s2.add(s1.pop());
+        }
+        return s2;
+    }
+}
+class Operation {
+    public static int Add=1;
+    public static int Sub=1;
+    public static int Mul=2;
+    public static int Div=2;
+    public static int getValue(String oper) {
+        int res=0;
+        switch (oper) {
+            case "+":
+                res=Add;
+                break;
+            case "-":
+                res=Sub;
+                break;
+            case "*":
+                res=Mul;
+                break;
+            case "/":
+                res=Div;
+                break;
+        }
+        return res;
+    }
+}
+
+```
+
+
