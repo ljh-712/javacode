@@ -1,0 +1,60 @@
+/**
+ * 八皇后问题：在8X8格的国际象棋上摆放八个皇后，使其不能互相攻击，即:任意两个皇后都不能处于同- -行、
+ * 同一列或同-斜线上，问有多少种摆法(92)。
+ * 用一个一维数组模拟，arr[i]  数组值代表皇后，数组下标i代表第几行
+ * 1) 第一个皇后先放第- -行第- -列
+ * 2) 第二个皇后放在第二行第- -列、然后判断是否OK， 如果不OK，继续放在第二列、第三列、依次把所有列都
+ * 放完，找到一个合适
+ * 3) 继续第三个皇后，还是第一-列、第二列....直到第8个皇后也能放在一一个不冲突的位置，算是找到了一个正确
+ * 解
+ * 4)当 得到一个正确解时，在栈回退到上一个栈时，就会开始回溯，即将第一个皇后，放到第一列的所有正确解,
+ * 全部得到.
+ * 5)然后回头继续第- 一个皇后放第二列，后面继续循环执行1,2,3,4 的步骤
+ * 6) 示意图:
+ */
+public class Queue8 {
+    private int max=8;
+    private int[] arr=new int[max];
+    private static int count=0;
+    private static int  judgeCount=0;
+    public static void main(String[] args) {
+        Queue8 queue=new Queue8();
+        queue.check(0);
+        System.out.println("一共有"+count+"种解法");
+        System.out.println("一共判断"+judgeCount+"种冲突");
+    }
+    private void check(int n) {
+        if (n==max) {//n==8即8个皇后放好
+             count++;
+            print();
+            return;
+        }
+        for (int i = 0; i <max ; i++) {
+            arr[n]=i;//将皇后放在第一行
+            if (judge(n)) {
+                //如果不冲突接着放下一个
+                check(n+1);
+
+            }
+            //如果冲突，继续执行arr[n]=i，将皇后放在本行的下一个位置
+        }
+    }
+    //判断任意两个皇后都不能处于同- -行、同一列或同-斜线上
+    private boolean judge(int n) {
+
+        judgeCount++;
+        for (int i = 0; i < n; i++) {
+            if (arr[i]==arr[n]||Math.abs(n-i)==Math.abs(arr[n]-arr[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void print() {
+        for (int i = 0; i <arr.length ; i++) {
+
+            System.out.print(arr[i]+" ");
+        }
+        System.out.println();
+    }
+}
