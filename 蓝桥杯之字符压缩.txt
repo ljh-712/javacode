@@ -1,0 +1,35 @@
+问题描述
+
+    编写一个程序，输入一个字符串，然后采用如下的规则对该字符串当中的每一个字符进行压缩： 　　
+    (1) 如果该字符是空格，则保留该字符；
+    (2) 如果该字符是第一次出现或第三次出现或第六次出现，则保留该字符；
+    (3) 否则，删除该字符。
+    　　例如，若用户输入“occurrence”，经过压缩后，字符c的第二次出现被删除，第一和第三次出现仍保留；字符r和e的第二次出现均被删除，因此最后的结果为：“ocurenc”。
+    　　输入格式：输入只有一行，即原始字符串。 　　输出格式：输出只有一行，即经过压缩以后的字符串。 输入输出样例 样例输入
+    occurrence 样例输出 ocurenc
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        //Scanner in=new Scanner(System.in);
+        //String s=in.nextLine();
+        String s="occurrence";
+        char[] ch=s.toCharArray();
+        int count[]=new int[ch.length];//记录某个字符是第几次出现
+        for (int i = 0; i < ch.length ; i++) {
+            for (int j = 0; j <=i ; j++) {
+                if (ch[i]==ch[j]) {
+                    count[i]++;
+                }
+
+            }
+        }
+       // System.out.println(s);
+        System.out.println(Arrays.toString(count));
+        for (int i = 0; i < ch.length; i++) {
+            if (ch[i]==' '||count[i]==1||count[i]==3||count[i]==6) {
+                System.out.print(ch[i]);
+            }
+        }
+    }
