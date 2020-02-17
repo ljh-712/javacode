@@ -1,0 +1,82 @@
+1、 给定一个数组，可以从数组中取出下标不连续的任意个数，求可以取出的数的和的最大值，
+
+    例如：给出数组A[]={1,2,2,5,3,4,3}可以取出的最大和为2+5+4=11。
+    现再给定数组{3,9,7,5,1,3,1,2,7}，能取出的数的和的最大值是24。
+
+
+    private static int dp1(int arr[],int len) {
+        int ret=0;
+        if (len==0) {
+            return 0;
+        }else if (len==1) {
+            return arr[0];
+        }else if (len==2) {
+            return Math.max(arr[0],arr[1]);
+        }else {
+            for(int i=2;i<len;i++) {
+                int r1=dp1(arr,len-2)+arr[i];
+                int r2=dp1(arr,len-1);
+                ret=Math.max(r1,r2);
+            }
+            return ret;
+
+        }
+   }
+
+//优化
+	private static int dp2(int arr[]) {
+        int dp[]=new int[arr.length];
+        dp[0]=arr[0];
+        dp[1]=Math.max(arr[0],arr[1]);
+        int i;
+        for (i = 2; i <dp.length; i++) {
+            int r1=arr[i]+dp[i-2];
+            int r2=dp[i-1];
+            dp[i]=Math.max(r1,r2);
+        }
+        return dp[i-1];
+    }
+
+  
+
+2. 给定一个正整数s, 判断一个数组arr中，是否有一组数字加起来等于s。
+
+/**
+     *
+     * 2. 给定一个正整数s, 判断一个数组arr中，是否有一组数字加起来等于s。
+     */
+    private static boolean isS(int[] arr,int i,int s) {
+        if (i==0) {
+            return arr[0]==s;
+        }else if (s==0) {
+            return true;
+        }else if (arr[i]>s){
+            return isS(arr,i-1,s);
+
+        }else {
+            return isS(arr,i-1,s)||isS(arr,i-1,s-arr[i]);//又可分为两种情况，arr[i-1]>s
+        }
+    }
+    private static boolean isS2(int[] arr,int s) {
+        boolean set[][]=new boolean[arr.length][s+1];
+        set[0][arr[0]]=true;
+        int i=0;
+        int j=0;
+        for (i = 0; i < arr.length ; i++) {
+            set[i][0]=true;
+        }
+        for (i = 1; i < arr.length; i++) {
+            for (j = 1; j < s+1; j++) {
+                if (arr[i]>j){
+                    set[i][j]=set[i-1][j];
+                }else {
+                    boolean a = set[i-1][j];
+                    boolean b = set[i-1][s-arr[i]];
+                    set[i][j]=a||b;
+                }
+            }
+
+        }
+        return set[i-1][j-1];
+    }
+————————————————
