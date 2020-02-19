@@ -1,0 +1,62 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+
+import javax.imageio.ImageIO;
+
+import com.swetake.util.Qrcode;
+
+public class QrcodeMain {
+	/**
+	 * 生成二维码的方法
+	 * @param content二维码的内容
+	 * @param imaPath二维码保存路径
+	 */
+	public static void getQrcodeImg(String content,String imgPath) {
+		Qrcode qrcode=new Qrcode();
+		//设置排错率
+		qrcode.setQrcodeErrorCorrect('M');
+		//设置字符编码,B国际编码
+		qrcode.setQrcodeEncodeMode('B');
+		//设置二维码版本
+		qrcode.setQrcodeVersion(15);
+		/**
+		 * 二维码的图片属性宽度，高度，颜色
+		 */
+		int width=235;
+		int height=235;
+		//画板
+		BufferedImage image=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		//画笔
+		Graphics2D gs=image.createGraphics();
+		gs.setBackground(Color.white);//设置颜色
+		gs.clearRect(0, 0 , width, height);//设置绘制区域
+		gs.setColor(Color.black);//画笔颜色
+		
+		try {
+			byte[] codeOut;
+			codeOut=content.getBytes("utf-8");
+			boolean[][] code=qrcode.calQrcode(codeOut);
+			for(int i=0;i<code.length;i++) {
+				for(int j=0;j<code.length;j++) {
+					if(code[i][j]) {
+						 gs.fillRect(j*3+2, i*3+2, 3, 3);
+					} 
+				}
+			}
+			gs.dispose();
+			image.flush();
+			ImageIO.write(image, "png", new File(imgPath));
+			System.out.println("二维码生成成功");
+		   } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
+	public static void main(String[] args) {
+		getQrcodeImg("走出半生，归来少年", "D:\\桌面新建文件夹\\作业\\l.png");
+	}
+}
