@@ -1,0 +1,61 @@
+***题目：**
+*给你一个由 '('、')' 和小写字母组成的字符串 s。
+你需要从字符串中删除最少数目的 '(' 或者 ')' （可以删除任意位置的括号)，使得剩下的「括号字符串」有效。
+请返回任意一个合法字符串。
+有效「括号字符串」应当符合以下 任意一条 要求：
+
+    空字符串或只包含小写字母的字符串
+    可以被写作 AB（A 连接 B）的字符串，其中 A 和 B 都是有效「括号字符串」
+    可以被写作 (A) 的字符串，其中 A 是一个有效的「括号字符串」
+**分析**：
+
+> 括号不匹配的情况只有两种：
+>     1.左括号出现了，但是没有对应的右括号；
+>     2.右括号出现了，但是没有对应的左括号。
+>     针对上述情况：
+我们定义两个变量，left和right，分别存左括号的数目和右括号的数目，利用'#'标记多余括号；遍历两遍，最后去掉#
+
+
+注：该题思路可参考我的上一篇博客[最长有效括号](https://blog.csdn.net/qq_41552331/article/details/104452674)
+
+
+**源码：**
+
+```java
+	 public static String minRemoveToMakeValid(String s) {
+		int left=0;
+        int right=0;
+        char[] chars=s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i]=='(') {
+                left++;
+            }else if (chars[i]==')') {
+                right++;
+            }
+            if (right>left) {
+                chars[i]='#';
+                left=right=0;
+            }
+        }
+        left=right=0;
+
+        for (int i = chars.length-1; i >=0 ; i--) {
+            if (chars[i]=='(') {
+                left++;
+            }else if (chars[i]==')') {
+                right++;
+            }
+            if (right<left) {
+               chars[i]='#';
+                left=right=0;
+            }
+        }
+        StringBuffer st=new StringBuffer();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i]!='#') {
+                st.append(chars[i]);
+            }
+        }
+        return new String(st);
+        }
+```
