@@ -1,0 +1,41 @@
+题目描述：
+一个非空整数数组，选择其中的两个位置，使得两个位置之间的数和最大。
+如果最大的和为正数，则输出这个数；如果最大的和为负数或0，则输出0 。
+
+    输入描述:
+
+    3,-5,7,-2,8
+
+    输出描述:
+
+    13
+
+    输入
+
+    -6,-9,-10
+
+    输出
+
+    0
+
+源码：
+
+public class Main {
+    public static void main(String args[]){
+        Scanner in=new Scanner(System.in);
+        String s=in.next();
+        String[] strs=s.split(",");
+        int max=0,tmp=0,a;
+        for(String i : strs){
+            a=Integer.parseInt(i);
+            tmp+=a;
+            if(tmp<0) tmp=0;
+            if(tmp>max) max=tmp;
+
+        }
+        System.out.println(max);
+    }
+}
+————————————————
+版权声明：本文为CSDN博主「鹿鸣hh」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/104494376
