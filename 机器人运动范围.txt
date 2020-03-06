@@ -1,0 +1,54 @@
+**题目描述**
+
+> 地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。
+> 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8
+> = 19。请问该机器人能够达到多少个格子？
+
+**思路分析：**
+回溯法：
+
+> 1、定义一个flag[][]数组保存地图上的每个点，从，0开始走，上下左右四个位置，走过的置为true;然后返回1+其他四个方向的满足要求的值。
+> 2、如何判断当前节点是否符合要求：
+>   1）当前节点在矩阵内；
+>    2）当前节点未被访问过；
+>     3）当前节点满足sum(i)+sum(j)<k限制
+
+**代码：** 
+
+```handlebars
+public class 机器人运动范围_ {
+    public static int movingCount(int threshold, int rows, int cols) {
+        boolean[][] flag=new boolean[rows][cols];//记录改点已经走过
+        return help(0,0,rows,cols,threshold,flag);
+    }
+
+    private static int help(int i,int j,int rows,int cols,int threshold,boolean flag[][]) {
+        if(i<0||i>=rows||j<0||j>=cols||sum(i)+sum(j)>threshold||flag[i][j]==true) {
+            return 0;
+        }
+        flag[i][j]=true;
+        return 1+help(i+1,j,rows,cols,threshold,flag)+help(i,j+1,rows,cols,threshold,flag)+
+                help(i-1,j,rows,cols,threshold,flag)+help(i,j-1,rows,cols,threshold,flag);
+    }
+
+
+
+    private static int sum(int i) {
+        int sum=0;
+        while (i>0) {
+            sum+=i%10;
+            i=i/10;
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(movingCount(18,40,40));
+    }
+
+
+}
+
+```
+
+
