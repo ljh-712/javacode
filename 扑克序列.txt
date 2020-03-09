@@ -1,0 +1,57 @@
+
+    A A 2 2 3 3 4 4， 一共4对扑克牌。请你把它们排成一行。
+    要求：两个A中间有1张牌，两个2之间有2张牌，两个3之间有3张牌，两个4之间有4张牌。
+
+    请填写出所有符合要求的排列中，字典序最小的那个。
+
+例如：22AA3344 比 A2A23344 字典序小。当然，它们都不是满足要求的答案。
+public class 扑克序列_ {
+    private static void per(int[] map,int k) {
+        if (k == map.length) {
+            if(jg(map)) {
+                System.out.println(Arrays.toString(map));
+            }
+        }
+        for (int i = k; i < map.length; i++) {
+            int t=map[i];
+            map[i]=map[k];
+            map[k]=t;
+            per(map,k+1);
+            t=map[i];
+            map[i]=map[k];
+            map[k]=t;
+        }
+    }
+    private static boolean jg(int[] a) {
+        int cnt=0;
+        boolean[] f=new boolean[8];
+        for(int i = 0; i < 8; ++i) {
+
+            if(a[i] == 1 && i+2 < 8 && a[i+2] == 2) {
+
+                ++cnt;
+            }
+
+            if(a[i] == 3 && i+3 < 8 && a[i+3] == 4) {
+
+                ++cnt;
+            }
+
+            if(a[i] == 5 && i+4 < 8 && a[i+4] == 6) {
+
+                ++cnt;
+            }
+
+            if(a[i] == 7 && i+5 < 8 && a[i+5] == 8) {
+
+                ++cnt;
+            }
+        }
+        return cnt == 4;
+    }
+
+    public static void main(String[] args) {
+        int[] a={1,2,3,4,5,6,7,8};
+        per(a,0);
+    }
+}
