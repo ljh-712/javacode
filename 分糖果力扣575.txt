@@ -1,0 +1,32 @@
+给定一个偶数长度的数组，其中不同的数字代表着不同种类的糖果，每一个数字代表一个糖果。你需要把这些糖果平均分给一个弟弟和一个妹妹。返回妹妹可以获得的最大糖果的种类数。
+思路都一样：去重求糖果种类
+解法一
+    public int distributeCandies(int[] candies) {
+        if (candies==null||candies.length==0) {
+            return 0;
+        }
+        HashSet < Integer > set = new HashSet < > ();
+        for (int candy: candies) {
+            set.add(candy);
+        }
+        return Math.min(set.size(), candies.length / 2);
+
+    }
+
+解法二：
+class Solution {
+    public int distributeCandies(int[] candies) {
+        if (candies==null||candies.length==0) {
+            return 0;
+        }
+        Arrays.sort(candies);
+        int j=0;
+        for(int i=1;i<candies.length;i++) {
+            if(candies[i]!=candies[j]){
+                j++;
+                candies[j]=candies[i];
+            }
+        }
+        return Math.min(j+1,candies.length/2);
+    }
+}
