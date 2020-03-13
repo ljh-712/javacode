@@ -1,0 +1,29 @@
+public class Main{
+    public static void main(String[] args) {
+        String s="abba";
+        System.out.println(longPalind(s));
+    }
+    public static String longPalind(String s) {
+        if(s==null||s.length()==0) {
+            return null;
+        }
+        int n=s.length();
+        String max="";
+        boolean[][] isPalind=new boolean[n+1][n+1];
+        for (int j = 0; j < n+1; j++) {
+            for (int i = j; i >=0 ;i--) {
+                if(i==j||i+1==j) {
+                    isPalind[i][j]=true;
+                }else if(s.charAt(i)==s.charAt(j-1)&&isPalind[i+1][j-1]) {
+                    isPalind[i][j]=true;
+                }
+                if(i!=j&&isPalind[i][j]&&max.length()<j-i) {
+                    max=s.substring(i,j);
+
+                }
+            }
+
+
+        }
+        return max;
+    }
