@@ -1,0 +1,103 @@
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null||q==null||p==null) {
+            return null;
+        }
+        Stack<TreeNode> sp=new Stack<>();
+        Stack<TreeNode> sq=new Stack<>();
+        help(root,p,sp);
+        help(root,q,sq);
+
+        int lenp=sp.size();
+        int lenq=sq.size();
+        while(lenp!=0&&lenq!=0) {
+            if(lenp>lenq) {
+                sp.pop();
+                lenp--;
+            }else if(lenq>lenp) {
+                sq.pop();
+                lenq--;
+            }else {
+                if(sp.peek()==sq.peek()) {
+                    return sp.peek();                
+                }else {
+                    sp.pop();
+                    sq.pop(); 
+                    lenp--;
+                    lenq--;
+                }
+            
+            }
+        }
+        return root;
+       
+    }
+    public boolean help(TreeNode root,TreeNode node,Stack<TreeNode> s) {
+        if(root==null||node==null) {
+            return false;
+        }
+        s.push(root);
+        if(root==node) {
+            return true;
+        }
+        if(help(root.left,node,s)||help(root.right,node,s)) {
+            return true;
+        }
+        s.pop();
+        return false;
+    }
+
+方法二：
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null||p==null||q==null) {
+            return null;
+        }
+        //如果有一个节点在根上
+        if(p==root||q==root) {
+            return root;
+        }
+        //检测p,q在root子树中的情况
+        boolean isInleftP=false;
+        boolean isInrightP=false;
+        boolean isInleftq=false;
+        boolean isInrightq=false;
+        if(isIntree(root.left,p)) {
+            isInleftP=true;
+            isInrightP=false;
+
+        }else {
+            isInleftP=false;
+            isInrightP=true;
+        }
+        if(isIntree(root.left,q)) {
+            isInleftq=true;
+            isInrightq=false;
+
+        }else {
+            isInleftq=false;
+            isInrightq=true;
+        }
+        //p,q分别在root左右子树中
+        if(isInleftP&&isInrightq||isInleftq&&isInrightP) {
+            return root;
+        }
+        //都在左
+        if(isInleftP&&isInleftq) {
+            return lowestCommonAncestor(root.left,p,q);
+        }else {//都在右
+             return lowestCommonAncestor(root.right,p,q);
+        }
+
+    }
+    public boolean isIntree(TreeNode root,TreeNode node){
+        if(root==null) {
+            return false;
+        }
+        if(root==node) {
+            return true;
+        }
+        if(isIntree(root.left,node)||isIntree(root.right,node)) {
+            return true;
+        }
+        return false;
+
+    } 
