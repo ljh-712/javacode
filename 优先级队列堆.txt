@@ -1,0 +1,217 @@
+优先级队列
+
+        概念
+        集合框架里的 PriorityQueue
+            特性
+            常用方法
+            优先级队列的模拟实现
+                堆的基本概念：
+        应用场景
+                top-K问题
+
+概念
+
+操作的数据带有优先级，一般出队列时，可能需要优先级高的元素出队
+集合框架里的 PriorityQueue
+
+    Java集合框架中提供了PriorityQueue和PriorityBlockingQueue两种类型的优先级队列，PriorityQueue是线程不安全的，PriorityBlockingQueue是线程安全的
+
+特性
+
+    PriorityQueue里放置的元素必须要比较大小，如果插入无法比较大小的对象会报出ClassCastException
+    不能插入null对象，否则会报NullPointerException异常
+    没有容量限制，底层自动扩容，可以任意插入多个元素。
+
+    jdk1.8的扩容方式： 如果容量小于64时，是按照oldCapacity2 + 2的方式扩容的
+    如果容量大于等于64，是按照oldCapacity2的方式扩容的
+    如果容量超过MAX_ARRAY_SIZE，按照MAX_ARRAY_SIZE来进行扩容
+
+    默认情况下，PriorityQueue队列底层默认容量为11.
+
+private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+private void grow(int minCapacity) {
+	int oldCapacity = queue.length;
+	// Double size if small; else grow by 50%
+	int newCapacity = oldCapacity + ((oldCapacity < 64) ?(oldCapacity + 2) :(oldCapacity >> 1));
+	// overflow-conscious code
+	if (newCapacity - MAX_ARRAY_SIZE > 0)
+	newCapacity = hugeCapacity(minCapacity);
+	queue = Arrays.copyOf(queue, newCapacity);
+}
+private static int hugeCapacity(int minCapacity) {
+	if (minCapacity < 0) // overflow
+	throw new OutOfMemoryError();
+	return (minCapacity > MAX_ARRAY_SIZE) ?Integer.MAX_VALUE :MAX_ARRAY_SIZE;
+}
+
+
+   
+
+    插入删除数据的时间复杂度为O(log2(n))
+    PriorityQueue底层使用了堆数据结构
+
+常用方法
+构造器 	介绍
+PriorityQueue() 	创建一个空的优先级队列，默认容量是11
+PriorityQueue(int initialCapacity) 	创建一个初始容量为initialCapacity的优先级队列initialCapacity不能小于1
+PriorityQueue(Collection<? extends E>c) 	用一个集合来创建优先级队列
+boolean offer(E e) 	插入元素e，
+E peek() 	获取优先级最高的元素，如果优先级队列为空，返回null
+E poll() 	移除优先级最高的元素并返回，如果优先级队列为空，返回null
+void clear() 	清空
+int size() 	获取有效元素的个数
+boolean isEmpty() 	检测优先级队列是否为空，空返回true
+优先级队列的模拟实现
+堆的基本概念：
+
+    如果有一个关键码的集合K = {k0，k1， k2，…，kn-1}，把它的所有元素按完全二叉树的顺序存储方式存储 在一个一维数组中，并满足：Ki <= K2i+1 且 Ki<= K2i+2 (Ki >= K2i+1 且 Ki >= K2i+2) i = 0，1，2…，则称为 小堆(或大堆)。将根节点最大的堆叫做最大堆或大根堆，根节点最小的堆叫做最小堆或小根堆。
+
+堆的性质：
+堆中某个节点的值总是不大于或不小于其父节点的值；
+堆总是一棵完全二叉树
+
+public class MyPriorityQueue {//模拟实现小堆
+     int[] array;
+     int size=0;//有效元素的个数
+
+
+    public MyPriorityQueue() {
+        array=new int[11];
+
+    }
+    //初始化堆
+    public MyPriorityQueue(int[] arr){
+        //System.arraycopy(arr,0,array,0,arr.length);
+        array=Arrays.copyOf(arr,arr.length);
+        //array=arr.clone();
+        size = array.length;
+        //将array中的元素进行调整，让其满足小堆的性质
+        int node = (arr.length - 2) >> 1;
+        for(;node >= 0;node--){
+            shiftdown(node);
+        }
+    }
+
+
+    //判空
+    public boolean isEmpty() {
+        return size==0;
+    }
+    public void clear() {
+        size=0;
+    }
+    //插入元素
+    //1. 先将元素放入到底层空间中(注意：空间不够时需要扩容)
+   //2. 将最后新插入的节点向上调整，直到满足堆的性质
+    public boolean offer(int val) {
+        if(array.length>=size) {
+            Arrays.copyOf(array,array.length*2);
+        }
+        array[size++]=val;
+        shiftup(size-1);
+        return true;
+    }
+    //删除元素
+    //1. 将堆顶元素对堆中最后一个元素交换
+	//2. 将堆中有效数据个数减少一个
+	//3. 对堆顶元素进行向下调整
+    public int pool(){
+        int oldvalue=array[0];
+        swap(0,size-1);
+        size--;
+        shiftdown(0);
+        return oldvalue;
+
+    }
+    //返回堆顶元素
+    public int peek() {
+        return array[0];
+    }
+    //向上调整
+    public void shiftup(int child) {
+        //新插入的孩子与双亲比较
+        int parent=(child-1)>>1;
+        while (child!=0) {
+
+            if (array[child] < array[parent]) {
+                swap(child, parent);
+                //上层可能也不满足堆的性质
+                child = parent;
+                parent = ((child - 1) >> 1);
+            } else {
+                return;
+            }
+        }
+
+    }
+    //向下调整
+    //将双亲与左右孩子比较，如果双亲大于左右孩子中的最小的，交换
+    public void shiftdown(int parent) {
+        int child=2*parent+1;
+        //先找到左右孩子中最小的孩子，前提是右孩子存在
+        while(child<size) {
+            if (child + 1 < size && array[child+ 1] < array[child ]) {
+                child = child + 1;
+            }
+            if (array[child] < array[parent]) {
+                swap(child,parent);
+                //继续往下调整
+                parent = child;
+                child = 2 * parent + 1;
+            } else {
+                return;
+            }
+        }
+    }
+
+    private void swap(int child, int parent) {
+        int temp = array[child];
+        array[child] = array[parent];
+        array[parent] = temp;
+    }
+    private void show() {
+        for (int i = 0; i < size; i++) {
+            System.out.print(array[i]+" ");
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] array={1,5,3,8,7,6};
+        MyPriorityQueue q=new MyPriorityQueue(array);
+        q.show();
+        System.out.println();
+        System.out.println(q.peek());
+        //System.out.println();
+        q.pool();
+        q.show();
+        System.out.println();
+        System.out.println(q.offer(-1));
+        q.show();
+        System.out.println();
+        System.out.println(q.isEmpty());
+
+        System.out.println(q.size);
+        q.clear();
+        System.out.println(q.isEmpty());
+        q.show();
+        System.out.println(q.size);
+
+    }
+
+}
+
+
+应用场景
+
+    用堆作为底层结构封装优先级队列
+    堆排序
+    在手机上玩游戏的时候，如果有来电，那么系统应该优先处理打进来的电话
+
+top-K问题
+
+从arr[1, n]这n个数中，找出最大的k个数，这就是经典的TopK问题。
+
+    解法一：排序，O(nlg(n))，将n个数排序之后，取出最大的k个
+    冒泡是一个很常见的排序方法，每冒一个泡，找出最大值，冒k个泡，就得到TopK。时间复杂度：O(nk)
+    解法二：先用前k个元素生成一个小顶堆，这个小顶堆用于存储，当前最大的k个元素，接着，从第k+1个元素开始扫描，和堆顶（堆中最小的元素）比较，如果被扫描的元素大于堆顶，则替换堆顶的元素，并调整堆，以保证堆内的k个元素，总是当前最大的k个元素。
+https://blog.csdn.net/qq_41552331/article/details/105037231
