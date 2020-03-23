@@ -1,0 +1,85 @@
+13、数组实现对象排序
+对自定义对象数组排序，需要引入“比较器”，的概念。
+Compareable和Compartor接口就是比较器抽象接口，通过实现类，重写接口方法来进行对象比较。
+?sort(Objetc[] a)
+当使用sort(Objetc[] a)来进行对象的自然排序，该对象必需实现Compareable接口，重写compareableTo方法，并一般在此方法中定义这3种返回值（1，0，-1）来进行排序标准的确认。
+    return 1 时，按照从小到大排序
+    return 0 时，原位置不动
+    return-1 时，按照从在到小排序
+而让对象继成Compareable接口的方式，称为内部比较器。
+注意，返回值常规用1，0，-1，并不是说一定要用1或者-1.此处的1和-1只代表俩值相减后为正数还是负数，那么，如果这样理解，我们同样也可以反回 2，0，-2
+ps: Collections.sort()方法和Arrays.sort()方法类似，对象也都需要实现Compareable接口。
+public class Student implements Comparable {
+
+	String name;
+	Integer age;
+
+	public Student(String name, Integer age) {
+		super();
+		this.name = name;
+		this.age = age;
+	}
+
+	public Student() {
+		super();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+
+		if (o instanceof Student) {
+			Student s = (Student) o;
+			if (this.age > s.age) {
+				return 1;
+			} else if (this.age == s.age) {
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+		return 0;
+
+	}
+
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+
+}     
+
+
+
+?	sort(T[] a, Comparator>? super T<> c)
+当调用此方法来进行自定义数组排序时，需要我们指定外部比较器。
+操作流程为： 定义一个类，如CustomRule，实现Comparator接口，重写其Compare方法 。
+那么，CustomRule这种类的定义就是为了给自定义对象排序，它也就是外部比较器。
+public class CustomRule implements Comparator {
+
+	@Override
+	public int compare(Object o1, Object o2) {
+		Student2 stu1 = (Student2) o1;
+		Student2 stu2 = (Student2) o2;
+		return stu1.score - stu2.score;
+
+	}
+
+}    
+
