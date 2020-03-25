@@ -1,0 +1,49 @@
+## 题目：
+
+> 输入n个数，围成一圈，求连续m（m<n）个数的和最大为多少？
+> 
+> 
+> **输入输出描述：**
+>  样例输入 10 3
+>   9 10 1 5 9 3 2 6 7 4 
+>  样例输出 23
+
+## 分析：
+可以通过==扩充数组==的方式模拟数组成环
+
+**代码：**
+
+```java
+public class Main1 {
+    private static int sum(int[] arr,int start,int n) {
+        int sum=0;
+        for (int i = start; i <start+n ; i++) {
+            sum+=arr[i];
+        }
+        return sum;
+    }
+    //　输入n个数，围成一圈，求连续m（m<n）个数的和最大为多少？
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        int n=in.nextInt();
+        int m=in.nextInt();
+        int max=0;
+        int sum=0;
+        int[] arr=new int[1500];
+        
+        for (int i = 0; i < n; i++) {
+            arr[i]=in.nextInt();
+        }
+        for (int i = 0; i < m; i++) {//数组前面的数移到后面去
+            arr[i+n]=arr[i];//数组扩充
+        }
+        for (int i = 0; i < n; i++) {
+
+            sum=sum(arr,i,m);
+            if(sum>max)
+                max=sum;
+        }
+
+        System.out.println(max);
+    }
+```
