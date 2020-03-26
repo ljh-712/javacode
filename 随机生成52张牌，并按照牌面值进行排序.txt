@@ -1,0 +1,105 @@
+public class Card implements Comparable<Card>{
+    public int rank; // 数值
+    public String suit; // 花色
+
+    @Override
+    public int compareTo(Card o) {
+        return 0;
+    }
+
+    public Card() {
+
+    }
+
+    public Card(int rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    @Override
+    public String toString() {
+        String strNum = String.format("%d", rank);
+
+        switch(rank)
+        {
+            case 11:
+                strNum = "J";
+                break;
+            case 12:
+                strNum = "Q";
+                break;
+            case 13:
+                strNum = "K";
+                break;
+        }
+
+        return suit + ":" + strNum;
+    }
+
+
+//    @Override
+//    public int compareTo(Card o) {
+//        if(o==null) {
+//            return 1;
+//        }
+//
+////        int t1=rank-o.rank;
+////        if(t1!=0) {
+////            return t1;
+////        }
+//        return suit.compareTo(o.suit);
+//
+//
+//    }
+    public static void main(String[] args) {
+
+        CreateCard newCard=new CreateCard();
+        List<Card> c=newCard.buyCard();
+        System.out.println("刚买回来的牌");
+        System.out.println(c);
+        System.out.println("排序按照红桃A-k,...方块A-k排序");
+        Collections.sort(c);
+        Collections.sort(c, new Comparator<Card>() {
+            @Override
+            public int compare(Card o1, Card o2) {
+                if(o1==o2) {
+                    return 0;
+                }
+                if(o1==null) {
+                    return -1;
+                }
+                if (o2==null) {
+                    return 1;
+                }
+                int t=o1.rank-o2.rank;
+                if(t!=0) {
+                    return t;
+                }
+                return o1.suit.compareTo(o2.suit);
+            }
+
+        });
+        System.out.println(c);
+
+
+    }
+}
+class CreateCard {
+
+    public static final String[] color = {"?", "?","? ","?" };//牌的花色
+
+    public List<Card> buyCard() {//创一副牌
+        Random r=new Random();
+        List<Card> cards = new ArrayList<>(52);
+        for (int i = 0; i < color.length; i++) {
+            for (int j = 0; j < 13; j++) {
+                int k=r.nextInt(13)+1;
+                Card card = new Card(k, color[i]);
+                cards.add(card);
+            }
+        }
+        return cards;
+
+    }
+
+}
