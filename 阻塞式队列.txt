@@ -1,0 +1,54 @@
+/**
+ * 阻塞式队列
+ * 保证多线程下增删安全
+ * 即生产消费达到上下限时需要阻塞等待
+ */
+public class BlockingQueue<E> {
+    private Object[] items;
+    private int takeIndex;//弹出索引
+    private int putIndex;//添加元素的索引
+    private int size;//有效容量
+
+    public BlockingQueue(int capacity) {
+        this.items=new Object[capacity];
+    }
+
+    public synchronized void put(E e) throws InterruptedException {
+        while (size==items.length) {
+            wait();
+        }
+
+        items[putIndex]=e;
+        putIndex=(putIndex+1)%items.length;
+        size++;
+        notifyAll();
+    }
+
+    public synchronized E take() throws InterruptedException {
+        while (size == 0) {
+            wait();
+        }
+
+        size--;
+        notifyAll();
+        takeIndex = (takeIndex + 1) % items.length;
+        return (E) items[takeIndex];
+    }
+    private static int SUM;
+    private static class Producer implements Runnable {
+
+        @Override
+        public void run() {
+            SUM+=3;
+            System.out.println("生产，库存为"+SUM);
+        }
+    }
+    private static class Consumer implements Runnable {
+
+        @Override
+        public void run() {
+            SUM--;
+            System.out.println("消费，剩余库存为"+SUM);
+        }
+    }
+}
