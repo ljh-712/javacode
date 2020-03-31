@@ -1,0 +1,37 @@
+## 环形子数组最大和
+
+> 给定一个由整数数组 A 表示的环形数组 C，求 C 的非空子数组的最大可能和。
+> 输入：[5,-3,5]
+输出：10
+解释：从子数组 [5,5] 得到最大和 5 + 5 = 10
+
+**分析：**
+
+> 和最大值分为两种情况：要么在跨边界，要么没跨边界。 ①如果没跨边界：最大值就是直接求无环数组最大和
+> ②：夸边界也就说中间一段是负数出现了数组最小和，所以我们只需要将数组最大和减去数组最小和便是环形数组最大和。
+> 取①②最大值，最后需要考虑全部是负数 的情况。
+
+
+代码：
+
+```java
+public int maxSubarraySumCircular(int[] A) {
+        int max=A[0];
+        int min=A[0];
+        int curMax=A[0];
+        int curMin=A[0];
+        int sum=A[0];
+        for(int i=1;i<A.length;i++) {
+            sum+=A[i];
+            curMax=Math.max(A[i],curMax+A[i]);
+            curMin=Math.min(A[i],curMin+A[i]);
+            max=Math.max(max,curMax);
+            min=Math.min(min,curMin);
+        }
+        if(max<0) return max;//全是负数
+        return Math.max(max,sum-min);
+
+        
+    }
+}
+```
