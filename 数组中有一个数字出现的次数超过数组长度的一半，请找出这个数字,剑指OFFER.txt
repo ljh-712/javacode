@@ -29,31 +29,7 @@ public static int MoreThanHalfNum_Solution(int [] array) {
         return 0;
     }
 解法二：如果这个数出现的次数占据了一半以上，则数组排序后的中位数一定是他；我们可以先排序，然后在判断
-public static int MoreThanHalfNum_Solution(int [] array) {
-        if(array.length==0||array==null) {
-            return 0;
-        }
-        int flag=array[0];
-        int count=1;//记录flag出现的次数
-        for(int i=1;i<array.length;i++) {
-            if(count==0) {
-                flag=array[i];
-                count=1;
-            }else if(flag==array[i]) {
-                count++;
-            }else {
-                count--;
-            }
-        }
-        count=0;
-        for(int i=0;i<array.length;i++) {
-            if(flag==array[i])
-                count++;
-        }
-        if(count>array.length/2) {
-            return flag ;
-        }
-        return 0;
-    }
+Arrays.sort(arr);
+        System.out.println(arr[arr.length/2-1]);
 
  
