@@ -1,0 +1,89 @@
+//import java.util.Scanner;
+//public class Main {
+//    private static void heapSort(int[] arr) {
+//        int lastroot=(arr.length-2)>>1;
+//        for(int root=lastroot;root>=0;root--) {
+//            shiftDown(arr,root,arr.length);
+//        }
+//        int end=arr.length-1;
+//        while(end>=0) {
+//            swap(arr,0,end);
+//            shiftDown(arr,0,end);
+//            end--;
+//        }
+//    }
+//    private static void shiftDown(int[] arr,int parent,int size) {
+//        int child=parent*2+1;
+//
+//        while(child<size) {
+//            if (child + 1 < size && arr[child] < arr[child + 1]) {
+//                child = child + 1;
+//            }
+//            if (arr[child] > arr[parent]) {
+//                swap(arr, child, parent);
+//                parent = child;
+//                child = parent * 2 + 1;
+//            } else {
+//                return;
+//            }
+//        }
+//    }
+//    private static void swap(int[] arr, int left, int right) {
+//        int t=arr[left];
+//        arr[left]=arr[right];
+//        arr[right]=t;
+//    }
+//    public static void main(String[] args) {
+//        Scanner in = new Scanner(System.in);
+//        String s=in.nextLine();
+//        String[] a=s.split(" ");
+//        int[] arr=new int[a.length-1];
+//
+//        for(int i=0;i<arr.length;i++) {
+//            arr[i]=Integer.parseInt(a[i]);
+//        }
+//        int k=Integer.parseInt(a[a.length-1]);
+//        heapSort(arr);
+//        for(int i=0;i<k;i++) {
+//            System.out.println(arr[i]+" ");
+//        }
+//
+//    }
+//}
+import java.util.*;
+public class Main{
+    public static int lastDeleteIndex(int n, int[] arr){
+        int distance = 0;//用来计算两数间的距离
+        int count = 0;//标记删除的数的个数
+        int i = 0;//遍历数组的游标
+        while(true){
+            if(count == n){
+                return i - 1;
+            }
+            if(i == n){
+                i = i % n;
+            }
+            if(arr[i] != -1){
+                distance++;
+            }
+            if(distance == 3){
+                distance = 0;
+                count++;
+                arr[i%n] = -1;
+            }
+            i++;
+        }
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        while(sc.hasNext()){
+            int n = sc.nextInt();
+            int[] arr = new int[n];
+            for(int i = 0; i < n; i++){
+                arr[i] = i;
+            }
+            int ret = lastDeleteIndex(n, arr);
+            System.out.println(ret);
+        }
+    }
+}
