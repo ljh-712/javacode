@@ -1,0 +1,324 @@
+目录
+
+    克隆对象
+        为什么要用克隆?
+        克隆的两种方式
+            浅克隆：实现 Cloneable 接口并重写 Object 类中的 clone()方法；
+                clone()方法下进行深拷贝：
+                new 一个对象和clone一个对象的区别
+            深克隆：实现 Serializable 接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆，
+    深浅拷贝
+        浅拷贝（Shallow Copy）
+            浅拷贝的实现方式：
+        深拷贝（Deep Copy）
+            深拷贝的实现方式：
+
+克隆对象
+为什么要用克隆?
+
+当我们遇到这样的情况：想对一个对象进行处理，又想保留原有的数据进行接下来的操作，就需要克隆了。
+克隆的两种方式
+浅克隆：实现 Cloneable 接口并重写 Object 类中的 clone()方法；
+
+    Object类是类结构的根类，其中有一个方法为protected Object clone() throws
+    CloneNotSupportedException，这个方法就是进行的浅拷贝。有了这个浅拷贝模板，我们可以通过调用clone()方法来实现对象的浅拷贝。
+    但是需要注意：
+    1、Object类虽然有这个方法，但是这个方法是受保护的（被protected修饰），所以我们无法直接使用。
+    2、使用clone方法的类必须实现Cloneable接口，否则会抛出异常CloneNotSupportedException。CloneNotSupportedException。对于这两点，我们的解决方法是，在要使用clone方法的类中重写clone()方法，通过super.clone()调用Object类中的原clone方法。
+
+clone()方法下进行深拷贝：
+
+** 如果想要深拷贝一个对象，这个对象必须要实现 Cloneable 接口，实现 clone方法，并且在 clone 方法内部，把该对象引用的其他对象也要 clone 一份，这就要求这个被引用的对象必须也要实现
+Cloneable 接口并且实现 clone 方法。
+
+class Pname implements Cloneable{
+    public String name;
+    public Pname(String name) {
+        this.name = name;
+    }
+
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return "Pname{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
+class Person implements Cloneable {
+
+    public int age;
+    public Pname name;
+    public Person() {
+
+    }
+
+    public Person(int age, Pname name) {
+        this.age = age;
+        this.name = name;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Person person= (Person) super.clone();
+        person.name= (Pname) name.clone();
+        return person;
+    }
+
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Pname pname=new Pname("肖战");
+        Person p4=new Person(18,pname);
+        Person p5=(Person) p4.clone();
+        System.out.println(p4);
+        System.out.println(p5);
+        pname.name="杨洋";
+        System.out.println(p5.name);
+        System.out.println(p5.age);
+
+
+    }
+
+}
+
+在这里插入图片描述可以和下面那个clone对比。
+new 一个对象和clone一个对象的区别
+
+new 一个对象：
+①分配内存（程序执行到 new 操作符时，首先去看 new 操作符后面的类型，因为知道了类型，才能知道要分配多大的内存空间）
+②调用构造方法（对对象进行初始化）
+在这里插入图片描述
+
+    由图可以看出，打印的地址值是相同的，既然地址都是相同的，那么肯定是同一个对象。 p 和 p1 只是引用而已，他们都指向了一个相同的对象 Person( ) ，也就是复制引用。
+
+clone一个对象：
+
+    clone 在第一步是和 new 相似的，都是分配内存，调用 clone 方法时，分配的内存和原对象（即调用 clone 方法 的对象）相同，然后再使用原对象中对应的各个域，填充新对象的域，填充完成之后， clone 方法返回，一个新的相同的对象被创建。
+
+在这里插入图片描述
+
+class Pname {
+    public Pname(String name) {
+        this.name = name;
+    }
+
+    public String name;
+
+    @Override
+    public String toString() {
+        return "Pname{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
+class Person implements Cloneable {
+
+    public int age;
+    public Pname name;
+    public Person() {
+
+    }
+
+    public Person(int age, Pname name) {
+        this.age = age;
+        this.name = name;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Pname pname=new Pname("肖战");
+        Person p4=new Person(18,pname);
+        Person p5=(Person) p4.clone();
+        System.out.println(p4);
+        System.out.println(p5);
+        pname.name="杨洋";
+        System.out.println(p5.name);
+        System.out.println(p5.age);
+
+
+    }
+
+}
+
+运行结果：在这里插入图片描述
+
+    真真正正的克隆了一个对象
+
+深克隆：实现 Serializable 接口，通过对象的序列化和反序列化实现克隆，可以实现真正的深度克隆，
+
+package commenbit.克隆对象及深浅拷贝;
+
+/**
+ * @author :Administrator.
+ * @date :2020/4/8 0008
+ * @time:21:57
+ */
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+public class MyUtil {
+    private MyUtil() {
+        throw new AssertionError();
+    }
+    @SuppressWarnings("unchecked")//用于抑制编译器产生警告信息。
+    public static <T extends Serializable> T clone(T obj) throws Exception {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bout);
+        oos.writeObject(obj);
+        ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+        ObjectInputStream ois = new ObjectInputStream(bin);
+        return (T) ois.readObject();
+        // 说明：调用 ByteArrayInputStream 或 ByteArrayOutputStream 对象的 close 方法没有任何意义
+        // 这两个基于内存的流只要垃圾回收器清理对象就能够释放资源，这一点不同于对外部资源（如文件流）的释放
+    }
+}
+class Person implements Serializable {
+    private static final long serialVersionUID = -9102017020286042305L;
+    private String name; // 姓名
+    private int age; // 年龄
+    private Car car; // 座驾
+
+    public Person(String name, int age, Car car) {
+        this.name = name;
+        this.age = age;
+        this.car = car;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    @Override
+    public String toString() {
+        return "Person [name=" + name + ", age=" + age + ", car=" + car + "]";
+    }
+}
+ /**
+ 2. * 小汽车类
+ 3. */
+ class Car implements Serializable {
+     private static final long serialVersionUID = -5713945027627603702L;
+     private String brand; // 品牌
+     private int maxSpeed; // 最高时速
+
+     public Car(String brand, int maxSpeed) {
+         this.brand = brand;
+         this.maxSpeed = maxSpeed;
+     }
+
+     public String getBrand() {
+         return brand;
+     }
+
+     public void setBrand(String brand) {
+         this.brand = brand;
+     }
+
+     public int getMaxSpeed() {
+         return maxSpeed;
+     }
+
+     public void setMaxSpeed(int maxSpeed) {
+         this.maxSpeed = maxSpeed;
+     }
+
+     @Override
+     public String toString() {
+         return "Car [brand=" + brand + ", maxSpeed=" + maxSpeed + "]";
+
+
+     }
+ }
+class CloneTest {
+    public static void main(String[] args) {
+        try {
+            Person p1 = new Person("Hao LUO", 33, new Car("Benz", 300));
+            Person p2 = MyUtil.clone(p1); // 深度克隆
+            p2.getCar().setBrand("BYD");
+            // 修改克隆的 Person 对象 p2 关联的汽车对象的品牌属性
+            // 原来的 Person 对象 p1 关联的汽车不会受到任何影响
+            // 因为在克隆 Person 对象时其关联的汽车对象也被克隆了
+            System.out.println(p1);
+            System.out.println(p2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+在这里插入图片描述
+深浅拷贝
+
+    Java中的对象拷贝(ObjectCopy)指的是将一个对象的所有属性（成员变量）拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用现有对象的部分或全部数据。 Java中的对象拷贝主要分为：浅拷贝(Shallow Copy)、深拷贝(Deep Copy)。
+    Java中的数据类型分为基本数据类型和引用数据类型。对于这两种数据类型，在进行赋值操作、用作方法参数或返回值时，会有值传递和引用（地址）传递的差别。
+
+浅拷贝（Shallow Copy）
+
+在这里插入图片描述
+
+    ①对于数据类型是基本数据类型的成员变量，浅拷贝会直接进行值传递，也就是将该属性值复制一份给新的对象。因为是两份不同的数据，所以对其中一个对象的该成员变量值进行修改，不会影响另一个对象拷贝得到的数据。
+    ②对于数据类型是引用数据类型的成员变量，比如说成员变量是某个数组、某个类的对象等，那么浅拷贝会进行引用传递，也就是只是将该成员变量的引用值（内存地址）复制一份给新的对象。因为实际上两个对象的该成员变量都指向同一个实例。在这种情况下，在一个对象中修改该成员变量会影响到另一个对象的该成员变量值。（String类型非常特殊，首先，String类型属于引用数据类型，不属于基本数据类型，但是String类型的数据是存放在常量池中的，也就是无法修改的！也就是说，当我将String属性改变后，并不是修改了这个数据的值，而是把这个数据的引用从当前指向常量变成改变后的常量。在这种情况下，另一个对象的属性值仍然指向修改前的不会受到影响。）
+
+浅拷贝的实现方式：
+
+    拷贝构造方法
+
+        Pname pname=new Pname("肖战");
+        Person p4=new Person(18,pname);
+        //Person p5=(Person) p4.clone();
+        Person p5=new Person(p4);
+        System.out.println(p4);
+        System.out.println(p5);
+        pname.name="杨洋";
+        p4.age=20;
+        System.out.println("修改后"+p4);
+        System.out.println("修改后"+p5);
+        //p4值传递部分的属性值发生变化时，p5不会随之改变；而引用传递部分属性值发生变化时，p5也随之改变
+
+p1值传递部分的属性值发生变化时，p2不会随之改变；而引用传递部分属性值发生变化时，p2也随之改变
+
+    重写clone()方法
+    上面写过
+
+深拷贝（Deep Copy）
+
+在这里插入图片描述
+
+    对于深拷贝来说，不仅要复制对象的所有基本数据类型的成员变量值，还要为所有引用数据类型的成员变量申请存储空间，并复制每个引用数据类型成员变量所引用的对象，直到该对象可达的所有对象。深拷贝对引用数据类型的成员变量的对象图中所有的对象都开辟了内存空间；而浅拷贝只是传递地址指向，新的对象并没有对引用数据类型创建内存空间。（一个类有一个对象，其成员变量中又有一个对象，该对象指向另一个对象，另一个对象又指向另一个对象，直到一个确定的实例。这就形成了对象图）；
+
+深拷贝的实现方式：
+
+    clone()方法下的深拷贝
+    通过对象序列化
+
