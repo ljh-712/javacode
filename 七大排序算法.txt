@@ -1,0 +1,413 @@
+目录标题
+
+    排序算法
+        基于比较的七大排序
+            插入排序
+                直接插入排序
+                二分插入排序：由于数据往有序区间插入，故可以采用
+            希尔排序
+            选择排序
+                直接选择排序
+                双向选择排序
+            冒泡排序
+            堆排序
+            快速排序
+                原理
+            归并排序
+            海量数据的处理
+            排序总结
+
+排序算法
+基于比较的七大排序
+插入排序
+直接插入排序
+
+原理：
+在这里插入图片描述将区间分为有序和无序的两个部分，每次取无序区间第一个元素依次与有序区间的值比较，如果该值key小于有序区间的数，有序区间的数往后移，继续往前找，选择合适的位置插入。
+
+代码
+
+/**
+     * 直接插入排序
+     * 时间复杂度：O(n^2)  空间复杂度：O（1）   稳定
+     *插入排序，初始数据越接近有序，时间效率越高
+     * @param arr
+     */
+    public static void insertSort(int arr[]) {
+        for (int i = 1; i < arr.length; i++) {
+            int end=i-1;
+            int key=arr[i];
+            while(end>=0&&arr[end]>key) {
+                arr[end+1]=arr[end];
+                end--;
+            }
+            arr[end+1]=key;
+        }
+    }
+
+二分插入排序：由于数据往有序区间插入，故可以采用
+
+ public static void insertSort1(int arr[]) {
+        for (int i = 1; i < arr.length; i++) {
+            int k=arr[i];
+            int left=0;
+            int right=i;
+            //查找
+            while (left<right) {
+                int mid=(left+right)>>2;
+                if(arr[mid]>=k) {
+                    right=mid-1;
+                }else {
+                    left=mid+1;
+                }
+            }
+            //搬移元素
+            for (int j = i; j >left ; j--) {
+                arr[j]=arr[j-1];
+            }
+            //插入
+            arr[left]=k;
+        }
+    }
+
+总结：插入排序，初始数据越接近有序，时间效率越高
+时间复杂度：最好O(N) 最坏O(N^2)
+空间复杂度：没有借助辅助空间 O(1)
+稳定性：稳定
+希尔排序
+
+原理：
+先选定一个整数（gap），把待排序文件中所有记录分成个组，所有距离为gap的记录分在同一组内，并对每一组内的记录进行排序。然后，取，重复上述分组和排序的工作。当到达=1时，所有记录在统一组内排好序。
+
+    希尔排序是对直接插入排序的优化。
+    当gap > 1时都是预排序，目的是让数组更接近于有序。当gap == 1时，数组已经接近有序的了，这样就会很
+    快。这样整体而言，可以达到优化的效果。我们实现后可以进行性能测试的对比
+    在这里插入图片描述
+
+代码：
+
+public static void shellSort(int[] arr) {
+        int gap=(arr.length/3)+1;
+        while(gap>0) {
+            for (int i = gap; i < arr.length; i++) {
+                int end = i - gap;
+                int key = arr[i];
+                while (end >= 0 && arr[end] > key) {
+                    arr[end + gap] = arr[end];
+                    end = end - gap;
+                }
+                arr[end + gap] = key;
+
+            }
+            gap--;
+        }
+    }
+
+总结：希尔排序是对直接插入排序的优化
+时间复杂度：最好O(N) 最坏O(N^2)
+空间复杂度：没有借助辅助空间 O(1)
+稳定性：不稳定
+选择排序
+直接选择排序
+
+原理：每一次从无序区间选出最大（或最小）的一个元素，存放在无序区间的最后（或最前），直到全部待排序的数据元素排完
+在这里插入图片描述代码：
+
+public static void selectSort(int[] arr) {
+        //选择最大的数放到最后面，也就是说一次排序能找到一个最值
+        //最后一次比较时只有一个元素，不需要选择，因此arr.length-1;
+        for (int i = 0; i < arr.length-1; i++) {
+            int maxPos=0;
+            for (int j = 1; j < arr.length-i; j++) {
+                if(arr[j]>arr[maxPos]) {
+                    maxPos=j;
+                }
+            }
+            if(maxPos!=arr.length-1-i) {
+                swap(arr,maxPos,arr.length-i-1);
+            }
+
+        }
+    }
+
+时间复杂度：O(n^2)
+空间复杂度：O(1)
+不稳定
+双向选择排序
+
+每一次从无序区间选出最小 + 最大的元素，存放在无序区间的最前和最后，直到全部待排序的数据元素排完 。
+
+    public static void selectSort1(int[] arr) {
+        int left=0;
+        int right=arr.length-1;
+        while (left<right) {
+            int maxPos=left;
+            int minPos=left;
+            int index=left+1;
+            while(index<=right) {
+                if (arr[index]>arr[maxPos]) {
+                    maxPos=index;
+                }
+                if (arr[index]<arr[minPos]) {
+                    minPos=index;
+                }
+                index++;
+            }
+            if(minPos!=left) {
+                swap(arr,minPos,left);
+
+            }
+
+            if (maxPos==left) {
+                maxPos=minPos;//防止如果最大元素在最小位置 将最小的交换到无序区间的最开始后，实际上最大的数已经不在 最小位置
+            }
+            if(maxPos!=right) {
+                swap(arr,maxPos,right);
+
+            }
+
+
+            left++;
+            right--;
+        }
+
+    }
+
+冒泡排序
+
+原理：
+在无序区间，通过相邻数的比较，将最大的数冒泡到无序区间的最后，持续这个过程，直到数组整体有序
+在这里插入图片描述代码：
+
+public static void bubbleSort(int[] arr) {
+        for (int i = 0; i < arr.length-1; i++) {//n个数据，比较了n-1趟
+            boolean isSorted=false;//检测是否交换数据
+            for (int j = 1; j < arr.length-i; j++) {//走一趟后最后一个位置的数据确定了
+                if(arr[j]<arr[j-1]) {
+                    swap(arr,j,j-1);
+                    isSorted=true;
+                }
+            }
+            if (!isSorted) {
+                break;
+            }
+
+        }
+    }
+
+时间复杂度：O(n^2)
+空间复杂度：O(1)
+稳定
+堆排序
+
+关于堆的介绍
+原理：
+建堆后，向下调整，此时最大/最小的数在堆顶，将其与最后一个元素交换后，继续向下调整，直至元素全部排完序。
+代码：
+
+public static void heapSort(int[] arr) {
+        //建堆
+        int lastroot=(arr.length-2)>>1;
+        for (int root=lastroot;root>=0;root--) {
+            shiftDown(root,arr,arr.length);
+        }
+        //将堆顶元素与最后一个元素交换位置，再向下调整
+        int end=arr.length-1;
+        while(end>=0) {
+            swap(arr,0,end);
+            shiftDown(0,arr,end);
+            end--;
+        }
+    }
+
+时间复杂度：O(nlogn)
+空间复杂度：O(1)
+不稳定
+快速排序
+原理
+
+    从待排序区间选择一个数，作为基准值(pivot)；
+    Partition: 遍历整个待排序区间，将比基准值小的（可以包含相等的）放到基准值的左边，将比基准值大的（可以包含相等的）放到基准值的右边；
+    采用分治思想，对左右两个小区间按照同样的方式处理，直到小区间的长度 == 1，代表已经有序，或者小区间的长度 == 0，代表没有数据。
+
+递归：
+
+  public static void quickSort(int[] arr,int left ,int right) {
+       if(right-left>=1) {
+          //说明区间内至少有两个元素
+           int div=partion3(arr,left,right);//在区间里找一个基准值，按照基准值将区间划分为两个部分
+           quickSort(arr,left,div-1);//对基准左边地进行排序
+           quickSort(arr,div+1,right);//对基准右边地进行排序
+
+       }
+
+   }
+
+基准值选择：
+选择边上
+随机选择
+三数取中
+
+Partition原理：
+
+    hoare法
+    -在这里插入图片描述
+
+ private static int partion(int[] arr, int left, int right) {
+        int start=left;
+        int end=right;
+        int p=arr[right];//基准值
+        while(start<end) {
+            //start往前走，找到比基准值大的停止
+            while(start<end&&arr[start]<=p) {
+                start++;
+            }
+            //end往前走，找到比基准值小的停止
+            while(start<end&&arr[end]>=p) {
+                end--;
+            }
+            if(start!=end) {
+                swap(arr,start,end);
+            }
+        }
+        swap(arr,start,right);
+        return start;
+    }
+
+    挖坑法
+
+private static int partion1(int[] arr, int left, int right) {
+        int start=left;
+        int end=right;
+        int p=arr[right];//基准值
+        while(start<end) {
+            while(start<end&&arr[start]<=p) {
+                start++;
+            }
+            arr[end]=arr[start];
+            while (start<end&&arr[end]>=p) {
+                end--;
+            }
+            arr[start]=arr[end];
+        }
+        arr[start]=p;
+        return start;
+    }
+
+    前后遍历法
+
+private static int partion3(int[] arr, int left, int right) {
+        int d=left+1;
+        int p=arr[left];
+        for (int i = left+1; i <= right ; i++) {
+            if(arr[i]<p) {
+                swap(arr,i,d);
+                d++;
+            }
+        }
+        swap(arr,d-1,left);
+        return d-1;
+    }
+
+非递归
+
+public static void quickSort(int[] arr) {
+      Stack<Integer> s=new Stack<>();
+      s.push(arr.length-1);
+      s.push(0);
+      while(!s.empty()) {
+          int left=s.pop();
+          int right=s.pop();
+          if(left>=right) {
+              continue;
+          }
+          int p=partion(arr,left,right);
+          s.push(right);
+          s.push(p+1);
+          s.push(p-1);
+          s.push(left);
+      }
+  }
+
+优化总结
+
+    选择基准值很重要，通常使用几数取中法
+    partition 过程中把和基准值相等的数也选择出来
+    待排序区间小于一个阈值时（例如 48），使用直接插入排序
+
+归并排序
+
+原理：,该算法是采用分治法（Divide andConquer）的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为二路归并。
+在这里插入图片描述
+递归版本
+
+private static void mergeSort(int[] arr,int left,int right) {
+        if(left>=right-1) {
+            return;
+        }
+        int mid=left+(right-left)/2;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid,right);
+        merge(arr,left,mid,right);
+    }
+
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int i=left;
+        int j=mid;
+        int len=right-left;
+        int temp[]=new int[len];
+        int k=0;
+        while (i<mid&&j<right) {
+            //加入等于保证有序性
+            if(arr[i]<=arr[j]) {
+                temp[k++]=arr[i++];
+            }else {
+                temp[k++]=arr[j++];
+            }
+        }
+        //将剩余元素放入temp数组
+        while(i<mid) {
+            temp[k++]=arr[i++];
+
+        }
+        while (j<right) {
+            temp[k++]=arr[j++];
+        }
+        //将temp里元素搬回arr
+        for (int t = 0; t < len; t++) {
+            arr[left+t]=temp[t];
+        }
+    }
+
+非递归版本：
+
+public static void mergeSort1(int[] array) {
+        for (int i = 1; i < array.length; i = i * 2) {
+            for (int j = 0; j < array.length; j = j + 2 * i) {
+                int low = j;
+                int mid = j + i;
+                if (mid >= array.length) {
+                    continue;
+                }
+                int high = mid + i;
+                if (high > array.length) {
+                    high = array.length;
+                }
+                merge(array, low, mid, high);
+            }
+        }
+    }
+
+海量数据的处理
+
+    外部排序：排序过程需要在磁盘等外部存储进行的排序
+    前提：内存只有 1G，需要排序的数据有 100G
+    因为内存中因为无法把所有数据全部放下，所以需要外部排序，而归并排序是最常用的外部排序
+
+    先把文件切分成 200 份，每个 512 M
+    分别对 512 M 排序，因为内存已经可以放的下，所以任意排序方式都可以
+    进行 200 路归并，同时对 200 份有序文件做归并过程，最终结果就有序了
+
+排序总结
+
+在这里插入图片描述
