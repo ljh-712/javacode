@@ -1,0 +1,31 @@
+    //一个数的立方分解任意的奇数和
+    public static String get(int m) {
+        int s=m*m+1-m;
+        String r="";
+        for (int i = 1; i <= m; i++) {
+
+            r+=s;
+            if(i!=m) {
+                r+="+";
+            }
+
+            s=s+2;
+
+        }
+        return r;
+    }
+    //组个最小数
+    private static List<Integer> fun(int[] arr) {
+        List<Integer> list=new ArrayList<>();
+        for (int i = 1; i < arr.length; i++) {
+            while (arr[i]>0) {
+                list.add(i);
+                arr[i]--;
+            }
+        }
+        while (arr[0]>0) {
+            list.add(1,0);
+            arr[0]--;
+        }
+        return list;
+    }
