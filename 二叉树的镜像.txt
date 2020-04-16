@@ -1,0 +1,48 @@
+**也就是说二叉树的镜像就是在遍历树的同时交换非叶子节点的子节点。**
+
+> 总结上面的过程，我们得出求一棵树的镜像的过程:==我们先前序遍历 这棵树的每个结点，如果遍历到的结点有子结点，就交换它的两个子结点。当交换完所有非叶子结点的左右子结点之后，就得到了树的镜像。==
+
+根据上面的思路我们可以写代码了：
+**递归：**
+
+```java
+	public void mirror(TreeNode root) {
+	    if(root==null) {
+	        return;
+	    }
+	    System.out.print(root.value);
+	    //交换根节点的左右子树
+	    TreeNode temp=root.left;
+	    root.left=root.right;
+	    root.right=temp;
+	
+	    //处理左子树
+	    mirror(root.left);
+	    mirror(root.right);
+
+	}
+```
+**非递归：**
+
+```java
+	public void mirror1(TreeNode root) {
+        if (root==null) {
+            return;
+        }
+        Stack<TreeNode> stack=new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TreeNode node=stack.pop();
+            System.out.print(node.value);
+            TreeNode temp=node.left;
+            node.left=node.right;
+            node.right=temp;
+            if(node.left!=null) {
+                stack.push(node.left);
+            }
+            if(node.right!=null) {
+                stack.push(node.right);
+            }
+        }
+    }
+```
