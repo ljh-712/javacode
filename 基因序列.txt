@@ -1,0 +1,33 @@
+给定一个很长的DNA序列，以及要求的最小子序列长度，研究人员经常会需要在其中找出GC-Ratio最高的子序列。
+
+输入
+
+AACTGTGCACGACCTGA
+5
+
+输出
+
+GCACG
+
+
+public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        while (input.hasNext()) {
+            String str = input.next();
+            int n = input.nextInt();
+            int max = 0;
+            int maxBeginIndex = 0;
+            for (int i = 0; i <= str.length()-n; i++) {
+                int count = 0;
+                for (int j = i; j < i+n; j++) {
+                    if (str.charAt(j)=='G'||str.charAt(j)=='C')
+                        count++;
+                }
+                if (count > max){
+                    maxBeginIndex = i;
+                    max = count;
+                }
+            }
+            System.out.println(str.substring(maxBeginIndex, maxBeginIndex+n));
+        }
+    }
