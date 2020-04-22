@@ -1,0 +1,165 @@
+/**
+ * 二叉搜索树：又叫二叉排序树
+ * 若它的左子树不为空，则左子树上所有节点的值都小于根节点的值
+ * 若它的右子树不为空，则右子树上所有节点的值都大于根节点的值
+ * 它的左右子树也分别为二叉搜索树
+ * 中序遍历结果有序
+ */
+public class BSTree {
+    public static class BSTNode {
+        BSTNode left=null;
+        BSTNode right=null;
+        int val;
+
+        public BSTNode(int val) {
+            this.val = val;
+        }
+    }
+    void inorder(BSTNode root) {
+        if(root!=null) {
+            inorder(root.left);
+            System.out.print(root.val+" ");
+            inorder(root.right);
+        }
+    }
+    private BSTNode root=null;//根节点
+
+    /**
+     * 检测val是否在二叉搜索树中
+     * @param val
+     * @return
+     */
+    boolean contains(int val) {
+        BSTNode cur=root;
+        while (cur!=null) {
+            if(val==cur.val) {
+                return true;
+            }else if(val<cur.val) {
+                cur=cur.left;
+            }else {
+                cur=cur.right;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 将val插入二叉搜索数
+     * @param val
+     * @return true表示成功
+     */
+    boolean put(int val) {
+        //空树直接插入
+        if(root==null) {
+            root=new BSTNode(val);
+            return true;
+        }
+        //非空，找待插入的元素在二叉搜索树中的位置，如果找到不插入，直接返回
+        BSTNode cur=root;
+        BSTNode parent=null;//保存插入节点的双亲
+        while (cur!=null) {
+            parent=cur;
+            if(val<cur.val) {
+                cur=cur.left;
+            }else if (val>cur.val) {
+                cur=cur.right;
+            }else {
+                return false;//表示要插入的数已经在树中
+            }
+        }
+        //否则插入新节点
+        cur=new BSTNode(val);
+        if(val<parent.val) {
+            parent.left=cur;
+        }else {
+            parent.right=cur;
+        }
+        return true;
+
+    }
+    boolean remove(int val) {
+        if (root==null) {
+            return false;
+        }
+        //非空
+        //找待删除节点在树里的位置
+        BSTNode cur=root;
+        BSTNode parent=null;
+        while (cur!=null) {
+            if(val==cur.val) {
+                break;
+            }else if(val<cur.val) {
+                parent=cur;
+                cur=cur.left;
+            }else {
+                parent=cur;
+                cur=cur.right;
+            }
+        }
+        if(cur==null) {//没有找到该节点
+            return false;
+        }
+        //找到了
+        //1、该节点没有左右孩子
+        //2、该节点只有左孩子
+        //3、该节点有右孩子
+        //4、该节点左右孩子都有
+        if(cur.left==null) {
+            //双亲不存在
+            if(parent==null) {
+                root=cur.right;
+            }
+            //双亲存在
+            else{
+                if(cur==parent.left) {
+                    parent.left=cur.right;
+                }else {
+                    parent.right = cur.right;
+                }
+            }
+
+        }else if(cur.right==null) {
+            if(parent==null) {
+                //双亲不存在，cur就是根节点
+                root=cur.left;
+            }else {
+                //双亲存在
+                if(parent.left==cur) {
+                    parent.left=cur.left;
+                }else {
+                    parent.right=cur.left;
+                }
+            }
+
+        }else {
+            //cur节点的左右孩子均存在
+            BSTNode del=cur.right;//找替换节点
+            parent=cur;
+            while (del.left!=null) {
+                parent=del;
+                del=del.left;
+            }
+            //将待删除节点的值用del节点的值替换
+            cur.val=del.val;
+            //删除del节点
+            if(parent.left==del) {
+                parent.left=del.left;
+            }else {
+                parent.right=del.right;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[] arr={6,8,4,5,7,3,2};
+        BSTree tree=new BSTree();
+        for (int i = 0; i < arr.length; i++) {
+            tree.put(arr[i]);
+        }
+        //tree.inorder(tree.root);
+        System.out.println(tree.remove(4));
+        tree.inorder(tree.root);
+
+    }
+}
