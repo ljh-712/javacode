@@ -1,0 +1,22 @@
+public boolean isBalance(TreeNode root) {
+        // write code here
+        if(root==null) {
+           return true;
+        }
+         int leftH=getHeight(root.left);
+         int rightH=getHeight(root.right);
+        if(leftH-rightH==1) {
+            return true;
+        }
+        return false;
+    }
+    private int getHeight(TreeNode root) {
+        if(root==null) {
+            
+            return 0;
+        }
+        int left=getHeight(root.left);
+        int right=getHeight(root.right);
+        int r=Math.max(left,right)+1;
+        return r;
+    }
