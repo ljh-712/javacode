@@ -1,0 +1,31 @@
+public class Solution {
+    public int minNumberInRotateArray(int [] array) {
+        int start=0;
+        int end=array.length-1;
+        int mid=start;
+        while(array[start]>=array[end]) {
+            if(end-start==1) {
+                mid=end;
+                break;
+            }
+            mid=(start+end)>>1;
+            if(array[start]==array[end]&&array[start]==array[mid]) {
+                //在start+1 到end里找最小值
+                int r=array[start];
+                for (int i = start+1; i <= end; i++) {
+                   if(r>array[i]) {
+                      r=array[i];
+                   }
+                }
+                return r;
+            }
+            if(array[mid]>=array[start]) {
+                start=mid;
+            }else if(array[mid]<=array[end]){
+                end=mid;
+            }
+        }
+        return array[mid];
+    
+    }
+}
