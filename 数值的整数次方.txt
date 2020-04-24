@@ -1,0 +1,22 @@
+/**
+ * 当x为奇数时，x^n=x^(n-1/2)*x^(n-1/2)*x
+ * x为偶数时，x^n=x^(n/2)*x^(n/2)
+ */
+public class 数值的整数次方 {
+    public static double fun(double x,int n) {
+        if(n==0) {
+            return 1;
+        }
+        if(n==1) {
+            return x;
+        }
+        double r=fun(x,n>>1);//根据那个公式求解,先求一半
+        r=r*r;
+        if((n&0x1)==1)
+            r=r*x;
+        return r;
+    }
+    public static void main(String[] args) {
+        System.out.println(fun(0.5,3));
+    }
+}
