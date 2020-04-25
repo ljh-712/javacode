@@ -1,0 +1,31 @@
+public class 二叉搜索数与双向链表 {
+    TreeNode pre=null;//标记中序遍历刚刚遍历过的节点
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if(pRootOfTree==null)
+            return null;
+        //找树中最小的节点，即双向链表的头
+        TreeNode head=pRootOfTree;
+        while(head.left!=null) {
+            head=head.left;
+        }
+        //修改每个节点left,right指向
+        inorder(pRootOfTree);
+        return head;
+    }
+
+    private void inorder(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return;
+        }
+        inorder(pRootOfTree.left);//转化根节点的左子树
+        //转化根节点
+        pRootOfTree.left = pre;
+        if (pre != null) {
+            pre.right = pRootOfTree;
+        }
+        pre = pRootOfTree;//用pre将刚刚遍历的节点保存起来
+        inorder(pRootOfTree.right);
+    }
+
+
+}
