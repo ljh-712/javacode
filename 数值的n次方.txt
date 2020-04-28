@@ -1,0 +1,20 @@
+public double Power(double base, int exponent) {
+        if(exponent==0) {
+            return 1.0;
+        }
+        if(exponent==1){
+            return base;
+        }
+        boolean flag=false;
+        if(exponent<0) {
+            exponent=-exponent;
+            flag=true;
+        }
+        double r=Power(base*base,exponent>>1);
+        
+        if((exponent%2)==1) {
+            r=r*base;
+        }
+            
+        return flag?1/r:r;
+  }
