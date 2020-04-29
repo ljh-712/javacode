@@ -1,0 +1,66 @@
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/4/29 0029
+ * @time:22:14
+ */
+public class ÃÜÂëÑéÖ¤ {
+    private static boolean checkLenth(String s) {
+        if(s.length()>8) {
+            return true;
+        }
+        return false;
+    }
+    private static boolean hasKinds(String s) {
+        char[] chars=s.toCharArray();
+        int d=0;//Êý×Ö
+        int u=0;//´óÐ´×ÖÄ¸
+        int low=0;//Ð¡Ð´×ÖÄ¸
+        int o=0;//ÆäËû×ÖÄ¸
+        for (char c:chars ) {
+            if (c>='0'&&c<='9') {
+                d=1;
+                continue;
+            }
+            else if(c>='a'&&c<='z') {
+                low=1;
+                continue;
+            }else if (c>='A'&&c<='Z') {
+                u=1;
+                continue;
+            }else {
+                o=1;
+                continue;
+            }
+
+        }
+        int cnt=low+u+d+o;
+        return cnt>=3?true:false;
+    }
+    private static boolean containsTwo(String s) {
+        for (int i = 0; i < s.length()-2; i++) {
+            String flag=s.substring(i,i+3);
+            if (s.substring(i+1).contains(flag)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while(sc.hasNext()) {
+            String s=sc.next();
+            if(checkLenth(s)&&hasKinds(s)&&containsTwo(s)) {
+                System.out.println("OK");
+            }else {
+                System.out.println("NG");
+            }
+        }
+
+    }
+
+
+
+}
