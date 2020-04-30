@@ -1,0 +1,37 @@
+public class 去除驼峰子串 {
+    public static String removeTuo(String str) {
+        if(str.length()<3) {
+            return str;
+        }
+        List<Character> list=new ArrayList<>();
+        for (int i = 0; i < str.length(); i++) {
+            list.add(str.charAt(i));
+        }
+        int len=list.size();
+        int i=0;
+        while(i<list.size()-2) {//结束的条件是list中只要两个字符串
+            if (list.get(i)== list.get(i+2)&&list.get(i)!= list.get(i+1)) {
+                list.remove(i);
+                list.remove(i);
+                list.remove(i);
+
+            }
+            i++;
+            int newL=list.size();//去除驼峰后新字符串的长度
+            if (i==list.size()-2&&len!=newL) {//找到最后了
+                len=list.size();
+                i=0;//从头开始找继续删
+            }
+
+        }
+        return list.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while (sc.hasNext()) {
+            String s=sc.next();
+            System.out.println(removeTuo(s));
+        }
+    }
+}
