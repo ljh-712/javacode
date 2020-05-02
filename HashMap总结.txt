@@ -1,0 +1,551 @@
+HashMap总结及其解读其底层源码（JDK1.8）
+●HashMap是Map接口使用频率最高的实现类。
+●允许使用null键和null值，与HashSet- 样，不保证映射的顺序。
+●所有的key构成的集合是Set:无序的、不可重复的。所以，key所在的类要重写:
+equals()和hashCode()
+●所有的value构成的集合是Collection:无序的、可以重复的。所以，value所在的类
+要重写: equals()
+●一个key-value构成一个entry
+●所有的entry构成的集合是Set:无序的、不可重复的
+●HashMap判断两个key相等的标准是:两个key通过equals()方法返回true, .
+hashCode值也相等。
+●HashMap判断两个value相等的标准是:两个value通过equals()方法返回true。
+
+### 1.初始容量为16
+
+```java
+    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+```
+	/**
+     * The default initial capacity - MUST be a power of two.
+     * 官方的解释是默认的初始容量必须是2的幂
+     * length 的值为2 的整数次幂，h & (length - 1)相当于对 length 取模。
+     * (h & (length - 1)求在表中下标)
+     * 这样提高了效率也使得数据分布更加均匀。
+
+	为什么会更加均匀？
+	length的值为偶数，length - 1 为奇数，则二进制位的最后一位为1，
+	这样保证了h & (length - 1)的二进制数最后一位可能为1，也可能为0。
+	如果为length为奇数，那么就会浪费一半的空间。
+     */
+
+
+
+### 2.HashMap的最大容量为2^30
+
+
+```java
+ static final int MAXIMUM_CAPACITY = 1 << 30;
+```
+	
+
+> 由于int类型限制了该变量的长度为4个字节共32个二进制位，按理说可以向左移动31位即2的31次幂。但是事实上由于二进制数字中最高的一位也就是最左边的一位是符号位，用来表示正负之分（0为正，1为负），所以只能向左移动30位，而不能移动到处在最高位的符号位
+
+3.默认负载因子为0.75
+
+```java
+ static final float DEFAULT_LOAD_FACTOR = 0.75f;
+```
+	负载因子是0.75的时候，空间利用率比较高，而且避免了相当多的Hash冲突，
+	使得底层的链表或者是红黑树的高度比较低，提升了空间效率
+[参考文章](http://baijiahao.baidu.com/s?id=1656137152537394906&wfr=spider&for=pc)
+### 3.何时链表和红黑树相互转化
+
+```java
+// 若链表中节点个数超过8时，会将链表转化为红黑树
+static final int TREEIFY_THRESHOLD = 8;
+
+// 若红黑树中节点小于6时，红黑树退还为链表
+static final int UNTREEIFY_THRESHOLD = 6;
+
+// 如果哈希桶中某条链表的个数超过8，并且桶的个数超过64时才会将链表转换为红黑树，否则直接扩容
+static final int MIN_TREEIFY_CAPACITY = 64;
+```
+**为什莫要转化？**
+> Map中桶的元素初始化是链表保存的，其查找性能是O(n)，而树结构能将查找性能提升到O(log(n))。当链表长度很小的时候，即使遍历，速度也非常快，但是当链表长度不断变长，肯定会对查询性能有一定的影响，所以才需要转成树
+
+**为什么转变条件 8 和 6 有一个差值。**
+
+> 如果没有差值，都是 8 ，那么如果频繁的插入删除元素，链表个数又刚好在 8 徘徊，那么就会频繁的发生链表转树，树转链表。
+
+**为什么不直接使用红黑树，而是要先使用链表实在不行再转红黑树呢？**
+
+```java
+* Because TreeNodes are about twice the size of regular nodes, we
+* use them only when bins contain enough nodes to warrant use
+* (see TREEIFY_THRESHOLD). And when they become too small (due to
+* removal or resizing) they are converted back to plain bins.  In
+* usages with well-distributed user hashCodes, tree bins are
+* rarely used.  Ideally, under random hashCodes, the frequency of
+* nodes in bins follows a Poisson distribution
+```
+源码中的解释大致意思是
+
+> 因为树节点的大小是链表节点大小的两倍，所以只有在容器中包含足够的节点保证使用才用它”，显然尽管转为树使得查找的速度更快，但是在节点数比较小的时候，此时对于红黑树来说内存上的劣势会超过查找等操作的优势，自然使用链表更加好，但是在节点数比较多的时候，综合考虑，红黑树比链表要好。
+
+**==为什么是8，而不是9不是10？==**
+
+```java
+Ideally, under random hashCodes, the frequency of nodes in bins follows a Poisson distribution 
+with a parameter of about 0.5 on average for the default resizing threshold of 0.75, although 
+with a large variance because of resizing granularity. Ignoring variance, the expected 
+occurrences of list size k are (exp(-0.5) * pow(0.5, k) / factorial(k)). 
+The first values are:
+      0:    0.60653066
+      1:    0.30326533
+      2:    0.07581633
+      3:    0.01263606
+      4:    0.00157952
+      5:    0.00015795
+      6:    0.00001316
+      7:    0.00000094
+      8:    0.00000006
+      more: less than 1 in ten million
+
+```
+
+> 通过源码我们得知HashMap源码作者通过泊松分布算出，当桶中结点个数为8时，出现的几率是亿分之6的（前提是良好的hash算法情况），因此**常见的情况是桶中个数小于8的情况，此时链表的查询性能和红黑树相差不多，因为转化为树还需要时间和空间，所以此时没有转化成树的必要**。
+> 理想情况下，在随机哈希码下，哈希表中节点的频率遵循泊松分布，而根据统计，忽略方差，列表长度为K的期望出现的次数是以上的结果，可以看到其实在**为8的时候概率就已经很小了，再往后调整并没有很大意义**
+
+**为什么是红黑树,不是平衡二叉树?**
+
+> （1）AVL树是更加严格的平衡，因此可以提供更快的查找速度，一般读取查找密集型任务，适用AVL树。 
+> （2）红黑树更适合于插入修改密集型任务。
+> **在CurrentHashMap中是加锁了的，实际上是读写锁，如果写冲突就会等待，如果插入时间过长必然等待时间更长，而红黑树相对AVL树他的插入更快！**
+
+### 4、HashMap桶中放置的节点---该节点是一个单链表的结构		
+	HashMap将其底层链表中节点封装为其内部的静态类
+	节点中带有：<key, value>键值对以及key所对应的哈希值			
+
+```java
+ static class Node<K,V> implements Map.Entry<K,V> {
+        final int hash;
+        final K key;
+        V value;
+        Node<K,V> next;
+
+        Node(int hash, K key, V value, Node<K,V> next) {
+            this.hash = hash;
+            this.key = key;
+            this.value = value;
+            this.next = next;
+        }
+
+        public final K getKey()        { return key; }
+        public final V getValue()      { return value; }
+        public final String toString() { return key + "=" + value; }
+
+        public final int hashCode() {
+            return Objects.hashCode(key) ^ Objects.hashCode(value);
+        }
+
+        public final V setValue(V newValue) {
+            V oldValue = value;
+            value = newValue;
+            return oldValue;
+        }
+
+        public final boolean equals(Object o) {
+            if (o == this)
+                return true;
+
+> 这里是引用
+
+            if (o instanceof Map.Entry) {
+                Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+                if (Objects.equals(key, e.getKey()) &&
+                    Objects.equals(value, e.getValue()))
+                    return true;
+            }
+            return false;
+        }
+    }
+```
+**get()方法工作原理**
+
+> 首先根据对象的Hash值进行数组方面的寻找，然后找到这个数组之后，判断key是不是唯一，如果key唯一，则直接返回，如果不唯一，则使用equals进行值的判断，最后返回数据。
+
+**当两个对象的hashcode相同会发生什么？**
+
+> hashcode相同，所以它们的bucket位置相同，‘碰撞’会发生。因为HashMap使用链表存储对象，这个Entry(包含有键值对的Map.Entry对象)会存储在链表中。这个时候要理解根据hashcode来划分的数组，如果数组的坐标相同，则进入链表这个数据结构中了，一般的添加都在最前面，也就是和数组下标直接相连的地方，链表长度到达8的时候，jdk1.8上升为红黑树
+
+
+ **如果两个键的hashcode相同，你如何获取值对象？** 
+ 
+
+> 当我们调用get()方法，HashMap会使用键对象的hashcode找到bucket位置，然后获取值对象，如果有两个值对象储存在同一个bucket，将会遍历链表直到找到值对象。找到bucket位置之后，会调用keys.equals()方法去找到链表中正确的节点，最终找到要找的值对象.遍历与hashCode值相等时相连的链表，直到相等或者null.
+
+**你了解重新调整HashMap大小存在什么问题吗？**
+
+> 当重新调整HashMap大小的时候，确实存在条件竞争，因为如果两个线程都发现HashMap需要重新调整大小了，它们会同时试着调整大小。在调整大小的过程中，存储在链表中的元素的次序会反过来，因为移动到新的bucket位置的时候，HashMap并不会将元素放在链表的尾部，而是放在头部，这是为了避免尾部遍历(tail traversing)，原数组[j]位置上的桶移到了新数组[j+原数组长度]。如果条件竞争发生了，那么就死循环了。
+
+
+### 5、 哈希函数
+
+
+```java
+static final int hash(Object key) {
+	int h;
+	return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+> 1. key如果为空，返回的是0号桶
+> 2. key如果不为空，返回该key所对应的哈希码，从该位置可以看出，如果key是自定义类型，必须要重写Object类的hashCode方法
+> 3. 高16bit不变，低16bit和高16bit做了一个异或，主要用于当hashmap 数组比较小的时候所有bit都参与运算了目的是减少碰撞
+> 4. 获取到哈希地址后，计算桶号的方式为：index = (table.length - 1) & hash
+> 5. 通过除留余数法方式获取桶号，因为Hash表的大小始终为2的n次幂，因此可以将取模转为位运算操作，提高效率，这也就是为什么要按照2倍方式扩容的一个原因
+> key&(table.length-1) 二进制 index key%(table.length-1) index 4&15
+> 100&1111 100 4%15 4 13&15 1101&1111 1101 13%15 13 19&15 10011&1111 11
+> 19%15 4
+> 通过上述方式可知，实际上hashcode的很多位是用不上的，因此在HashMap的hash函数中，才使用了移位运算，只取了hashcode的前16位来做映射。2^15=65536
+> 已经是很大的数字了，另一方面&操作比取模效率更高
+
+### 6、构造函数
+
+```java
+// 构造方法一：带有初始容量16的构造，负载因子使用默认值0.75
+public HashMap(int initialCapacity) {
+	this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+
+// 构造方法二：
+public HashMap() {
+	this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+}
+
+// 构造方法三：带有初始容量和初始负载因子的构造
+public HashMap(int initialCapacity, float loadFactor) {
+	// 如果容量小于0，抛出非法参数异常
+	if (initialCapacity < 0)
+	throw new IllegalArgumentException("Illegal initial capacity: " +
+	initialCapacity);
+	// 如果初始容量大于最大值，用2^30代替
+	if (initialCapacity > MAXIMUM_CAPACITY)
+	initialCapacity = MAXIMUM_CAPACITY;
+	// 检测负载因子是否非法，如果负载因子小于0，或者负载因子不是浮点数，抛出非法参数异常
+	if (loadFactor <= 0 || Float.isNaN(loadFactor))
+	throw new IllegalArgumentException("Illegal load factor: " +
+	loadFactor);
+	// 给负载因子和容量赋值，并将容量提升到2的整数次幂
+	// 注意：构造函数中并没有给
+	this.loadFactor = loadFactor;
+	this.threshold = tableSizeFor(initialCapacity);
+}
+```
+
+```java
+static final int tableSizeFor(int cap) {
+	int n = cap - 1;
+	n |= n >>> 1;
+	n |= n >>> 2;
+	n |= n >>> 4;
+	n |= n >>> 8;
+	n |= n >>> 16;
+	return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+}
+```
+
+**如果new HashMap(19)，bucket数组多大？**
+
+> HashMap的bucket 数组大小一定是2的幂，如果new的时候指定了容量且不是2的幂，实际容量会是最接近(大于)指定容量的2的幂，比如 new HashMap<>(19)，比19大且最接近的2的幂是32，实际容量就是32。
+> 
+> 
+**HashMap什么时候开辟bucket数组占用内存？**
+> HashMap在new 后并不会立即分配bucket数组，而是第一次put时初始化，类似ArrayList在第一次add时分配空间。
+
+### 7、 扩容机制
+
+> Java8的扩容中，不是简单的将原数组中的每一个元素取出进行重新hash映射，而是做移位检测。所谓移位检测 的含义具体是针对HashMap做映射时的&运算所提出的，通过上文对&元算的分析可知，映射的本质即看hash值的 某一位是0还是1，当扩容以后，会相比于原数组多出一位做比较，由多出来的这一位是0还是1来决定是否进行移 位，而具体的移位距离，也是可知的，及位原数组的大小
+
+```java
+static final int tableSizeFor(int cap) {
+	int n = cap - 1;
+	n |= n >>> 1;
+	n |= n >>> 2;
+	n |= n >>> 4;
+	n |= n >>> 8;
+	n |= n >>> 16;
+	return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+}
+```
+
+```java
+ final Node<K,V>[] resize() {
+        Node<K,V>[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        int oldThr = threshold;
+        int newCap, newThr = 0;
+        if (oldCap > 0) {
+        //如果当前哈希桶的容量超过最大值2^30，直接返回旧哈希桶的大小
+        //到达上限的threhold设置最大阈值返回表示以后就不在扩容了，随便存不管哈希冲突，此时只能无限增加红黑树节点
+            if (oldCap >= MAXIMUM_CAPACITY) {
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // 按照两倍扩容后，如果容量没有达到上限
+			// 并且旧容量已经超过16
+			// newCap翻倍，则按照两倍的方式扩容
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+                     // 下一次扩容时参考，达到该阈值则扩容
+                newThr = oldThr << 1; // double threshold
+        }
+        else if (oldThr > 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        else {               // zero initial threshold signifies using defaults
+        // 将新容量设置为默认值16
+		// 将扩容阈值设置为0.75*16
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
+        // 如果新阈值为0，按照新容量的大小重新计算下一次扩容时的阈值
+		// 计算方式：采用新容量 * 负载因子
+		// 即扩容的时机为：当元素个数超过阈值时则扩容
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        // 更新下次扩容的上限
+        threshold = newThr;
+        @SuppressWarnings({"rawtypes","unchecked"})
+        // 申请更多的桶，将旧哈希桶中节点转移到新哈希桶中
+            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+        table = newTab;
+        if (oldTab != null) {
+            for (int j = 0; j < oldCap; ++j) {
+                Node<K,V> e;
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    if (e.next == null)
+                        newTab[e.hash & (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                    else { // preserve order
+                        Node<K,V> loHead = null, loTail = null;
+                        Node<K,V> hiHead = null, hiTail = null;
+                        Node<K,V> next;
+                        do {
+                            next = e.next;
+                            if ((e.hash & oldCap) == 0) {
+             //如果 lXXX 树的数量小于 6，就把 lXXX 树的枝枝叶叶都置为空，变成一个单节点
+            //然后让这个桶中，要还原索引位置开始往后的结点都变成还原成链表的 lXXX 节点
+            //这一段元素以后就是一个链表结构
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+    }
+```
+**HashMap为什么要按照2倍扩容？**
+
+> HashMap 通过除留余数法方式获取桶号，因为Hash表的大小始终为2的n次幂，因此可以将取模转为位运算操作，提高效率，这也就是为什么要按照2倍方式扩容的一个原因
+> 当HashMap的容量是16时，它的二进制是10000，(n-1)的二进制是01111，与hash值得计算结果如下：
+
+![上面四种情况我们可以看出，不同的hash值，和(n-1)进行位运算后，能够得出不同的值，使得添加的元素能够均匀分布在集合中不同的位置上，避免hash碰撞。](https://img-blog.csdnimg.cn/20200502115736850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNTUyMzMx,size_16,color_FFFFFF,t_70)
+
+> 上面四种情况我们可以看出，不同的hash值，和(n-1)进行位运算后，能够得出不同的值，使得添加的元素能够均匀分布在集合中不同的位置上，避免hash碰撞。
+
+### 8、 根据Key获取Value
+
+```java
+public V get(Object key) {
+    Node<K,V> e;
+    return (e = getNode(hash(key), key)) == null ? null : e.value;
+}
+```
+1. 通过key计算出其哈希地址，然后借助哈希地址在哈希桶中找到与key对应的节点
+2. 如果节点为null，返回null，说明HashMap中节点是可以为空的
+3. 如果节点不为空，返回该节点中的value
+
+### 9、检测Key是否存在
+
+```java
+public boolean containsKey(Object key) {
+    return getNode(hash(key), key) != null;
+}
+```
+1. 先通过getNode()获取与key对应的节点
+2. 如果节点不为空，说明存在返回true，否则返回false
+3. 时间复杂度：平均为O(1)，如果当前key所对应的桶中挂接的链表则顺序查找，挂接的是红黑树按照红黑树性质找
+
+### 10、插入节点
+1. 先使用key借助hash函数计算key的哈希地址
+2. 将key-value键值对，结合计算出的hash地址插入到哈希桶中
+
+ 
+3. 从以下代码中可以看到，HashMap在插入时，并没有处理线程安全问题，因此HashMap不是线程安全的
+4. 红黑树优化链表过长是java8新引进，是基于性能的考虑，在冲突大时，红黑树算法会比链表综合表现更好
+```java
+public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+    }
+
+    /**
+     * Implements Map.put and related methods
+     *
+     * @param hash hash for key
+     * @param key the key
+     * @param value the value to put
+     * @param onlyIfAbsent if true, don't change existing value
+     * @param evict if false, the table is in creation mode.
+     * @return previous value, or null if none
+     */
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,boolean evict) {
+        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        // 1. 桶如果是空的，则进行扩容
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+        // 2. (n-1)&hash-->计算桶号，如果当前桶中没有节点，直接插入
+        // p来记录桶中的第一个节点
+        if ((p = tab[i = (n - 1) & hash]) == null)
+            tab[i] = newNode(hash, key, value, null);
+        else {
+            Node<K,V> e; K k;
+            // 3. 如果key已经是和桶中第一个节点相等，不进行插入
+            if (p.hash == hash &&
+                    ((k = p.key) == key || (key != null && key.equals(k))))
+                e = p;
+            else if (p instanceof TreeNode) // 4. 如果该桶中挂接的是红黑树，向红黑树中插入
+                e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+            else {
+                // 5. key不同，也不是红黑树，说明当前桶中挂的是一个链表
+                // a. 在当前链表中找key
+                // b. 如果找到，则不插入
+                // c. 如果没有找到，先构建新节点，然后将该节点尾插到链表中
+                // d. 检测bitCount的计数，binCount记录的是在未插入新节点前原链表的节点个数
+                // e. 新节点插入后，链表长度是否超过TREEIFY_THRESHOLD，如果超过将链表转换为红黑树
+                for (int binCount = 0; ; ++binCount) {
+                    if ((e = p.next) == null) {
+                        // p已经是最后一个节点，说明在链表中未找到key对应的节点
+                        // 进行尾插
+                        p.next = newNode(hash, key, value, null);
+                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash); // 将链表转化为红黑树
+                        break;
+                    }
+                    // 如果key已经存在，跳出循环
+                    if (e.hash == hash &&
+                            ((k = e.key) == key || (key != null && key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            // 如果key已经存在，将key所对节点中的value替换为参数指定value，返回旧value
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        ++modCount;
+        if (++size > threshold)
+            resize();
+        afterNodeInsertion(evict);
+        return null;
+    }
+```
+### 11、 删除key
+
+```java
+public V remove(Object key) {
+        Node<K,V> e;
+        return (e = removeNode(hash(key), key, null, false, true)) == null ?
+            null : e.value;
+    }
+
+    /**
+     * Implements Map.remove and related methods
+     *
+     * @param hash hash for key
+     * @param key the key
+     * @param value the value to match if matchValue, else ignored
+     * @param matchValue if true only remove if value is equal
+     * @param movable if false do not move other nodes while removing
+     * @return the node, or null if none
+     */
+    final Node<K,V> removeNode(int hash, Object key, Object value,
+                               boolean matchValue, boolean movable) {
+        Node<K,V>[] tab; Node<K,V> p; int n, index;
+        // 1. 检测哈希表是否存在
+		// 2. index = (n - 1) & hash: 获取桶号
+		// 3. p记录当前桶中第一个节点，如果桶中没有节点，直接返回null
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+            (p = tab[index = (n - 1) & hash]) != null) {
+            Node<K,V> node = null, e; K k; V v;
+            // 如果第一个节点就是key，用node记录
+            if (p.hash == hash &&
+                ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p;
+                // 如果当前桶下是红黑树，在红黑树中查找，结果用node记录
+            else if ((e = p.next) != null) {
+                if (p instanceof TreeNode)
+                    node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
+                else {
+                // 当前桶下是链表，遍历链表，在链表中检测是否存在为key的节点
+                    do {
+                        if (e.hash == hash &&
+                            ((k = e.key) == key ||
+                             (key != null && key.equals(k)))) {
+                            node = e;
+                            break;
+                        }
+                        p = e;
+                    } while ((e = e.next) != null);
+                }
+            }
+            // node不为空，在HashMap中找到
+            if (node != null && (!matchValue || (v = node.value) == value ||
+                                 (value != null && value.equals(v)))) {
+                // 如果节点在红黑树中，将其删除
+                if (node instanceof TreeNode)
+                    ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
+                // 如果节点是链表中第一个节点，将当前链表中下一个节点地址放在桶中
+                else if (node == p)
+                    tab[index] = node.next;
+                else`在这里插入代码片`
+                    p.next = node.next;
+                ++modCount;
+                --size;
+                //LinkedHashMap使用,HashMap并没有实现
+                afterNodeRemoval(node);
+                // 删除成功，返回原节点
+                return node;
+            }
+        }
+        return null;
+    }
+```
+### 总结: JDK1.8相较于之前的变化:
+**1.HashMap map = new HashMap(;//默认情况下，先不创建长度为16的数组
+2.当首次调用map.put()时，再创建长度为16的数组
+3.数组为Node类型，在jdk7中称 为Entry类型
+4.形成链表结构时，新添加的key-value对在链表的尾部(七上八下)
+5.当数组指定索引位置的链表长度>8时，且map中的数组的长度> 64时，此索引位置
+上的所有key-value对使用红黑树进行存储。**
