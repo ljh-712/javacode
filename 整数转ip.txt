@@ -1,0 +1,44 @@
+public class 整数转ip {
+    private static String fun(int n) {//十转二
+        int[] a=new int[255];
+        int i=0;
+        while(n!=0) {
+            a[i++]=n%2;
+            n=n/2;
+        }
+        StringBuffer st=new StringBuffer();
+        for (int j = i-1; j >=0 ; j--) {
+            //System.out.print(a[j]);
+            st.append(a[j]);
+        }
+        return new String(st);
+    }
+    private static int fun1(String s) {//二转十
+        int sum=0;
+        for (int i = 0; i <s.length() ; i++) {
+            sum+=Integer.parseInt(s.charAt(s.length()-1-i)+"")*Math.pow(2,i);
+        }
+        return sum;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s=sc.next();
+        String[] ch=s.split("\\.");
+        int ip=sc.nextInt();
+        StringBuffer sn=new StringBuffer();
+        for (int i = 0; i < ch.length; i++) {
+            sn.append(fun(Integer.parseInt(ch[i])));
+        }
+        System.out.println(sn);
+        System.out.println(fun1(sn+""));
+        String f=fun(167969729);
+        for(int i=0;i<f.length()-8;i=i+8){
+
+            System.out.print(Integer.parseInt(f.substring(i,i+8),2)+".");
+        }
+
+    }
+
+
+
+}
