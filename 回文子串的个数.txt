@@ -1,0 +1,24 @@
+public class 回文子串的个数 {
+    static int count=0;
+    //中心扩散法
+    private static void getParCount(String s,int left,int right) {
+        while(left>=0&&right<s.length()&&s.charAt(left)==s.charAt(right)) {
+            left--;
+            right++;
+            count++;
+        }
+
+    }
+
+
+    private static int dp(String s) {
+        int n = s.length(), ans = 0;
+        boolean[][] dp = new boolean[n][n];
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i; j < n; j++) {
+                dp[i][j] = (s.charAt(i) == s.charAt(j)) && (j - i <= 2 || dp[i + 1][j - 1]);
+                if (dp[i][j]) ans++;
+            }
+        }
+        return ans;
+    }
