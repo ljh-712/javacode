@@ -1,0 +1,50 @@
+package 牛客.everyDay;
+
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/5/8 0008
+ * @time:20:12
+ */
+public class 奇偶校验 {
+    private static int sumOne(int n) {
+        int count=0;
+        int b=1;
+        for (int i = 0; i < 8; i++) {
+            if((n&b)==b) {
+                count++;
+            }
+            b=(b<<1);
+        }
+        return count;
+    }
+    private static String num(int n) {//整数转换为二进制输出
+        int b=128;
+        StringBuilder s=new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            if((n&b)==b) {
+                s.append("1");
+            }else {
+                s.append("0");
+            }
+            b=(b>>>1);
+        }
+        return s.toString();
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (in.hasNext()) {// 注意，如果输入是多个测试用例，请通过while循环处理多个测试用例
+            String s=in.next();
+            int ch=0;
+            for (int i = 0; i < s.length(); i++) {
+                ch=s.charAt(i);
+                if((sumOne(ch)%2)==0) {
+                    ch+=128;
+                }
+                System.out.println(num(ch));
+            }
+
+        }
+    }
+}
