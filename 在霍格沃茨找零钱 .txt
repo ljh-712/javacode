@@ -1,0 +1,31 @@
+
+
+
+十九个纳特(Knut)兑一个西可，很容易。”现在，给定哈利应付的价钱P和他实付的钱A，你的任务是写一个程序来计算他应该被找的零钱。
+
+输入描述:
+输入在1行中分别给出P和A，格式为“Galleon.Sickle.Knut”，其间用1个空格分隔。这里Galleon是[0, 107]]区间内的整数，Sickle是[0, 
+17)区间内的整数，Knut是[0, 29)区间内的整数。
+
+
+输出描述:
+在一行中用与输入同样的格式输出哈利应该被找的零钱。如果他没带够钱，那么输出的应该是负数。
+
+
+public class 找零钱 {
+    public static final int[] arr={17*29,29,1};
+    public static void main(String[] args) {
+               Scanner sc=new Scanner(System.in);
+        String[] s1=sc.next().split("\\.");
+        String[] s2=sc.next().split("\\.");
+        int A[]={Integer.parseInt(s1[0]),Integer.parseInt(s1[1]),Integer.parseInt(s1[2])};
+        int B[]={Integer.parseInt(s2[0]),Integer.parseInt(s2[1]),Integer.parseInt(s2[2])};
+        int t1=A[0]*arr[0]+A[1]*arr[1]+A[2]*arr[2];
+        int t2=B[0]*arr[0]+B[1]*arr[1]+B[2]*arr[2];
+        int r=t2-t1;
+        if(r<0) {
+            System.out.print("-");
+            r=-r;
+        }
+        System.out.println(r/arr[0]+"."+r%arr[0]/arr[1]+"."+r%arr[0]%arr[1]/arr[2]);
+}
