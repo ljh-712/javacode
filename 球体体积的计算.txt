@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/5/13 0013
+ * @time:22:18
+ */
+public class ÇòµÄÌå»ý {
+
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        while(in.hasNext()) {
+            double x0=in.nextFloat();
+            double y0=in.nextFloat();
+            double z0=in.nextFloat();
+            double x1=in.nextFloat();
+            double y1=in.nextFloat();
+            double z1=in.nextFloat();
+            double r=Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0)+(z1-z0)*(z1-z0));
+            System.out.printf("%.3f",r);
+            System.out.print(" ");
+            double v=4*Math.acos(-1)*Math.pow(r, 3)/3;
+            System.out.printf("%.3f",v);
+        }
+    }
+}
