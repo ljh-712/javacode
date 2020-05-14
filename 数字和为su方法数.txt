@@ -1,0 +1,26 @@
+public class 数字和为sum的方法数 {
+    static int[] arr=new int[21];
+    static int n;
+    private static int count(int v,int i) {
+        if(v==0) {
+            return 1;
+        }if(i==n||v<0) {
+            return 0;
+        }
+
+        return count(v-arr[i],i+1)+count(v,i+1);//选arr[i]和不选arr[i]
+
+    }
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+        n=in.nextInt();
+        int v=in.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            arr[i]=in.nextInt();
+        }
+        System.out.println(count(v,0));
+    }
+
+
+}
