@@ -1,0 +1,58 @@
+public class VivoTest {
+    //现给定任意正整数 n，请寻找并输出最小的正整数 m（m>9），
+    // 使得 m 的各位（个位、十位、百位 ... ...）之乘积等于n，若不存在则输出 -1。
+    public int solution (int n) {
+        // write code here
+        if(n<10) {
+            return 10+n;
+        }
+        int r=0;
+        int base=1;
+        for (int i = 9; i >1 ; i--) {
+            while(n%i==0) {
+
+                r+=i*base;
+                base*=10;
+                n=n/i;
+            }
+        }
+        if (n>1) {
+            return -1;
+        }
+        return r;
+    }
+
+    //假设第一天量产1台，接下来2天(即第二、三天)每天量产2件，
+    // 接下来3天(即第四、五、六天)每天量产3件 ... ...
+    //以此类推，请编程计算出第n天总共可以量产的手机数量。
+    public int solution1 (int n) {
+        // write code here
+
+        //sum记录生产的总数
+        //num表示接下来num天每天要生产num个产品
+        //count记录生产num数量的天数
+        int sum=0,count=1,num=1;
+        for(int i=1;i<=n;i++,++count){
+
+            sum+=num;
+            //当达到num天时，生产数量num加一，count重新开始计数
+            if(count==num){
+                count=0;
+                num++;
+            }
+        }
+        return sum;
+
+    }
+
+    public static void main(String[] args) {
+        int c=0;
+        for (int i = 0; i < 1000; i++) {
+            if(i%3==0||i%5==0) {
+                c++;
+            }
+        }
+        System.out.println(c);
+    }
+
+}
