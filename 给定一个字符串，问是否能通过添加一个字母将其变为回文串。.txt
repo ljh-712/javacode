@@ -1,0 +1,34 @@
+//给定一个字符串，问是否能通过添加一个字母将其变为回文串。
+public class 回文串 {
+    private static boolean isHuiwen(String s) {
+        for (int i = 0; i < s.length()/2; i++) {
+            if(s.charAt(i)!=s.charAt(s.length()-i-1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while (sc.hasNext()) {
+            String s=sc.next();
+            boolean flag=false;
+            int i=0;
+            while(i<s.length()/2) {
+                if(s.charAt(i)!=s.charAt(s.length()-i-1)) {
+                    break;
+                }
+            }
+            if(i==s.length()/2) {
+                flag=true;
+            }else {
+                flag=isHuiwen(s.substring(i+1,s.length()-2*i))||isHuiwen(s.substring(i,s.length()-2*i-1));
+            }
+            if(flag) {
+                System.out.println("YES");
+            }else {
+                System.out.println("NO");
+            }
+        }
+    }
+}
