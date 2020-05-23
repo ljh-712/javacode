@@ -1,0 +1,60 @@
+package 牛客.everyDay;
+
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/5/22 0022
+ * @time:19:34
+ */
+public class 输入年月日计算是一年第多少天 {
+
+    private static int sum(int year,int month,int day) {
+
+        switch (month) {
+            case 12:
+                day += 30;
+            case 11:
+                day += 31;
+            case 10:
+                day += 30;
+            case 9:
+                day += 31;
+            case 8:
+                day += 31;
+            case 7:
+                day += 30;
+            case 6:
+                day += 31;
+            case 5:
+                day += 30;
+            case 4:
+                day += 31;
+            case 3:{
+                if (year%4 == 0 && year%100!=0){
+                    day += 29;
+                }else
+                    day += 28;
+            }
+            case 2 :
+                day += 31;
+            case 1:
+                day += 0;
+
+        }
+        return day;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int year = sc.nextInt();
+            int month = sc.nextInt();
+            int day = sc.nextInt();
+            int sumD = 0;
+
+            System.out.println(sum(year, month, day));
+        }
+
+
+    }
+}
