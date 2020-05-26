@@ -1,0 +1,41 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+/**
+ * nowcoder有两盒（A、B）乒乓球，有红双喜的、有亚力亚的……
+ * 现在他需要判别A盒是否包含了B盒中所有的种类，并且每种球的数量不少于B盒中的数量，该怎么办呢？
+ */
+public class 乒乓球筐 {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while (sc.hasNext()) {
+            String a=sc.next();
+            String b=sc.next();
+            HashMap<Character,Integer> hashMap1=new HashMap<>();
+            HashMap<Character,Integer> hashMap2=new HashMap<>();
+            for (int i = 0; i < a.length(); i++) {
+                hashMap1.put(a.charAt(i),hashMap1.getOrDefault(a.charAt(i),0)+1);
+            }
+            for (int i = 0; i < b.length(); i++) {
+                hashMap2.put(b.charAt(i),hashMap2.getOrDefault(b.charAt(i),0)+1);
+            }
+            boolean flag=false;
+            for (Character c:hashMap2.keySet()) {
+
+                if(!hashMap1.containsKey(c)) {
+                    flag=true;
+                    break;
+                }
+                if(hashMap1.get(c)<hashMap2.get(c)) {
+                    flag=true;
+                    break;
+                }
+            }
+            if(flag) {
+                System.out.println("No");
+            }else {
+                System.out.println("Yes");
+            }
+        }
+    }
+}
