@@ -1,0 +1,19 @@
+public class 三或五的倍数和 {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n=sc.nextInt();
+            int sum=0;
+            for (int i = 3; i < n; i++) {
+                if(i%3==0||i%5==0) {
+                    sum+=i;
+                }
+                if(i%15==0) {
+                    sum-=i;
+                }
+
+            }
+            System.out.println(sum);
+        }
+    }
+}
