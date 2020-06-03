@@ -1,0 +1,63 @@
+给定一个包含大写英文字母和数字的句子，找出这个句子所包含的最大的十六进制整数，返回这个整数的值。数据保证该整数在int表示范围内
+package 牛客.everyDay;
+
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/6/3 0003
+ * @time:23:41
+ */
+public class 最大的十六进制数 {
+    //遍历字符串，遇到数字或A到F之间的字母时将其加入一个临时字符串中，
+    // 遇到G到Z的字母时将之前的临时字符串变为数字并更新答案。
+    public static int solve (String s) {
+        int max=0;
+        StringBuffer str=new StringBuffer();
+        for (int i = 0; i < s.length(); i++) {
+            if(s.charAt(i)<='F'&&s.charAt(i)>='A'||s.charAt(i)>='0'&&s.charAt(i)<='9') {
+                str.append(s.charAt(i));
+            }
+            if(s.charAt(i)<='Z'&&s.charAt(i)>='G') {
+                max=Math.max(max,tToHex(str.toString()));
+                str=new StringBuffer();
+            }
+        }
+        return max;
+    }
+    private static int tToHex(String s) {
+
+        int base=1;
+        int ans=0;
+        for (int i = s.length()-1; i >= 0 ; i--) {
+            ans+=fun(s.charAt(i))*base;
+            base*=16;
+        }
+        return ans;
+    }
+    private static int fun(char c) {
+        if(c=='A') {
+            return 10;
+        }else if (c=='B') {
+            return 11;
+        }else if (c=='C') {
+            return 12;
+        }else if (c=='D') {
+            return 13;
+        }else if (c=='E') {
+            return 14;
+        }else if (c=='F') {
+            return 15;
+        }else {
+            return c-'0';
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        String s=sc.next();
+        System.out.println(tToHex(s));
+        System.out.println(solve(s));
+    }
+}
