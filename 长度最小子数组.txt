@@ -1,0 +1,26 @@
+/**
+     * 给定一个含有?n?个正整数的数组和一个正整数?s ，找出该数组中满足其和 ≥ s 的长度最小的连续子数组，并返回其长度。如果不存在符合条件的连续子数组，返回 0。
+     *
+     * @param s
+     * @param nums
+     * @return
+     */
+    public int minSubArrayLen(int s, int[] nums) {
+        int l=0;
+        int r=0;
+        int len=nums.length;
+        int min=Integer.MAX_VALUE;
+        int sum=0;
+        while (r<len) {
+            sum+=nums[r];
+            r++;
+            while (s<=sum) {
+                min=Math.min(min,r-l);
+                sum-=nums[l];
+                l++;
+            }
+
+        }
+        return min==Integer.MAX_VALUE?0:min;
+
+    }
