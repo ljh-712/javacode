@@ -1,0 +1,16 @@
+import java.util.Set;
+public class Solution {
+    public boolean wordBreak(String s, Set<String> dict) {
+        boolean dp[]=new boolean[s.length()+1];
+        dp[0]=true;//代表全字符串都在字典里
+        for(int i=1;i<s.length()+1;i++) {
+            for(int j=i-1;j>=0;j--) {
+                if(dp[j]&&dict.contains(s.substring(j,i))) {
+                    dp[i]=true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
