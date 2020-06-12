@@ -1,0 +1,79 @@
+package luming.model;
+
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/6/12 0012
+ * @time:18:32
+ */
+public class Main {
+    private static void fun(int n,int[] arr) {
+        int left=0;
+        int right=0;
+        if(n==0) {
+            left=-1;
+            int t2=n;
+
+            while (t2<=arr.length-1) {
+                if (arr[t2]<arr[n]) {
+                    right=t2;
+                    break;
+                }else {
+                    right=-1;
+                }
+                t2++;
+
+            }
+        }
+        else if (n==arr.length-1){
+            right=-1;
+            int t=n;
+            while (t>=0) {
+                if(arr[t]<arr[n]) {
+                    left=t;
+                    break;
+                }else {
+                    left=-1;
+                }
+                t--;
+            }
+        }else {
+            int t=n;
+            while (t>=0) {
+                if(arr[t]<arr[n]) {
+                    left=t;
+                    break;
+                }else {
+                    left=-1;
+                }
+                t--;
+            }
+            int t2=n;
+            while (t2<=arr.length-1) {
+                if (arr[t2]<arr[n]) {
+                    right=t2;
+                    break;
+                }else {
+                    right=-1;
+                }
+                t2++;
+            }
+        }
+        System.out.println(left+" "+right);
+    }
+    public static void main(String[] args) {
+        Scanner in=new Scanner(System.in);
+
+            int n = in.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = in.nextInt();
+            }
+            for (int i = 0; i < n; i++) {
+                fun(i, arr);
+            }
+
+
+    }
+}
