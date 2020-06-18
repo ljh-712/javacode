@@ -1,0 +1,50 @@
+/**
+ * 找出单向链表中的一个节点，该节点到尾指针的距离为K。链表的倒数第0个结点为链表的尾指针。
+ * 要求时间复杂度为O(n)。
+ */
+class ListNode1 {
+    ListNode1 next;
+    int val;
+
+    public ListNode1(int val) {
+        this.val = val;
+    }
+}
+public class MainDemo {
+    private static ListNode find(ListNode head,int k) {
+        ListNode cur=head;
+        int len=0;
+        int count=0;
+        while (cur!=null) {
+            cur=cur.next;
+            len++;
+        }
+        ListNode p=head;
+        while (p!=null) {
+            if(len-k!=count) {
+                count++;
+                p=p.next;
+            }else {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        ListNode head=new ListNode(1);
+        ListNode p=head;
+        p.next=null;
+        for (int i = 2; i < 8; i++) {
+            ListNode n=new ListNode(i);
+            p.next=n;
+            p=n;
+            p.next=null;
+
+        }
+        p=find(head,sc.nextInt());
+        System.out.println(p.val);
+    }
+
+}
