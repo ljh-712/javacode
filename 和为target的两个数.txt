@@ -1,0 +1,169 @@
+给定一个整数数组 nums?和一个目标值 target，请你在该数组中找出和为目标值的那?两个?整数，并返回他们的数组下标。
+
+你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
+
+package 牛客;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author :Administrator.
+ * @date :2020/6/24 0024
+ * @time:23:56
+ */
+public class 和为target的两个数 {
+    public static int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                if(nums[i]+nums[j]==target) {
+                    return new int[]{nums[i],nums[j]};
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        int[] arr={5,1,0,4,3};
+        System.out.println(Arrays.toString(twoSum2(arr,6)));
+    }
+    public static int[] twoSum1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int left=0;
+        int right=nums.length-1;
+        while (left<right) {
+            if(nums[left]+nums[right]>target) {
+                right--;
+            }else if (nums[left]+nums[right]<target) {
+                left++;
+            }else {
+                return new int[]{nums[left],nums[right]};
+            }
+        }
+        return null;
+    }
+    public static int[] twoSum2(int[] nums, int target) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if(map.containsKey(target-nums[i])) {
+                return new int[]{nums[map.get(target-nums[i])],nums[i]};
+            }
+            map.put(nums[i],i);
+        }
+        return null;
+    }
+}
+
+package 牛客;
+
+package 牛客;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author :Administrator.
+ * @date :2020/6/24 0024
+ * @time:23:56
+ */
+public class 和为target的两个数 {
+    public static int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                if(nums[i]+nums[j]==target) {
+                    return new int[]{nums[i],nums[j]};
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        int[] arr={5,1,0,4,3};
+        System.out.println(Arrays.toString(twoSum2(arr,6)));
+    }
+    public static int[] twoSum1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int left=0;
+        int right=nums.length-1;
+        while (left<right) {
+            if(nums[left]+nums[right]>target) {
+                right--;
+            }else if (nums[left]+nums[right]<target) {
+                left++;
+            }else {
+                return new int[]{nums[left],nums[right]};
+            }
+        }
+        return null;
+    }
+    public static int[] twoSum2(int[] nums, int target) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if(map.containsKey(target-nums[i])) {
+                return new int[]{nums[map.get(target-nums[i])],nums[i]};
+            }
+            map.put(nums[i],i);
+        }
+        return null;
+    }
+}
+
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author :Administrator.
+ * @date :2020/6/24 0024
+ * @time:23:56
+ */
+public class 和为target的两个数 {
+    public static int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                if(nums[i]+nums[j]==target) {
+                    return new int[]{nums[i],nums[j]};
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        int[] arr={5,1,0,4,3};
+        System.out.println(Arrays.toString(twoSum2(arr,6)));
+    }
+    public static int[] twoSum1(int[] nums, int target) {
+        Arrays.sort(nums);
+        int left=0;
+        int right=nums.length-1;
+        while (left<right) {
+            if(nums[left]+nums[right]>target) {
+                right--;
+            }else if (nums[left]+nums[right]<target) {
+                left++;
+            }else {
+                return new int[]{nums[left],nums[right]};
+            }
+        }
+        return null;
+    }
+    public static int[] twoSum2(int[] nums, int target) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if(map.containsKey(target-nums[i])) {
+                return new int[]{nums[map.get(target-nums[i])],nums[i]};
+            }
+            map.put(nums[i],i);
+        }
+        return null;
+    }
+}
