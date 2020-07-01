@@ -1,0 +1,79 @@
+Lambda表达式
+什么是 Lambda表达式？
+
+    Lambda表达式是Java SE 8中一个重要的新特性。lambda表达式允许你通过表达式来代替功能接口。 lambda表达式就和方法一样,它提供了一个正常的参数列表和一个使用这些参数的主体(body,可以是一个表达式或一个代码块)。 Lambda 表达式（Lambda expression）可以看作是一个匿名函数，一段可传递的代码(将代码像数据一样进行传递)。可以写出更简洁、更灵活的代码，作为一种更紧促的代码风格，使Java语言表达能力得到提升
+
+语法
+
+(parameters) -> expression 或 (parameters) ->{ statements; }
+
+    1
+
+    paramaters：类似方法中的形参列表，这里的参数是函数式接口里的参数。这里的参数类型可以明确的声明
+    也可不声明而由JVM隐含的推断。另外当只有一个推断类型时可以省略掉圆括号。
+    ->：可理解为“被用于”的意思
+    方法体：可以是表达式也可以代码块，是函数式接口里方法的实现。代码块可返回一个值或者什么都不返回，这里的代码块等同于方法的方法体。如果是表达式，也可以返回一个值或者什么都不返回
+
+例子
+
+无参数无返回值，并且lambda体中只有一条语句，则->左侧括号不能省略，右侧的{}可以省略
+
+    //无参数无返回值，并且lambda体中只有一条语句，则->左侧括号不能省略，右侧的{}可以省略
+    public static void test1(){
+        Runnable r1=new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("run1");
+            }
+        };
+        r1.run();
+
+        Runnable r2=()-> System.out.println("run2");
+        r2.run();
+
+    }
+
+ 
+
+有一个参数，并且lambda体中只有一条语句，则->左侧括号与右侧的{}均可以省略不写
+
+	public static void test2(){
+		Consumer<String> con1 = (e)-> {System.out.println(e);};
+		con1.accept("hello Lambda");
+		// 如果只有一个参数，参数的括号可以省略
+		// 如果lambda表达式体只有一条语句，lambda题的{}也可以省略
+		Consumer<String> con2 = e-> System.out.println(e);
+		con2.accept("hello Lambda");
+	}
+
+    
+
+
+有返回值，但是Lambda体中只有一条语句时，则->右侧的{}可以省略不写
+
+	public static void test3(){
+        List<Integer> list = Arrays.asList(3,2,1,4,0);
+        list.sort((e1,e2)->Integer.compare(e1,e2));
+        list.forEach(e-> System.out.print(e + " "));
+    }
+
+
+
+有两个以上参数，有返回值，并且Lambda体中有多条语句，()和{}都不能省略
+
+	Comparator<Employee> cmp = (e1, e2)->{
+		System.out.println("函数式接口");
+		return e1.getAge() - e2.getAge();
+	};
+
+
+
+lambda表达式参数列表的类型可以省略不写，因为JVM编译器会通过上下文信息进行推演
+
+	Comparator<Employee> cmp = (Employee e1, Employee e2)->{
+		System.out.println("函数式接口");
+		return e1.getAge() - e2.getAge();
+	}
+————————————————
+版权声明：本文为CSDN博主「是鹿鸣啊」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/106152170
