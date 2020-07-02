@@ -1,0 +1,105 @@
+模板模式
+什么是模板模式？
+
+    在模板模式（Template Pattern）中，一个抽象类公开定义了执行它的方法的方式/模板。它的子类可以按需要重写方法实现，但调用将以抽象类中定义的方式进行。这种类型的设计模式属于行为型模式。
+
+代码示例
+
+public abstract class Game {
+
+    abstract void initGame();
+    abstract void startPlay();
+    abstract void endGame();
+
+    public final void play() {
+        initGame();//初始化游戏
+        startPlay();//开始游戏
+        endGame();//结束游戏
+    }
+
+}
+public class Playfootball extends Game{
+
+    @Override
+    void initGame() {
+        System.out.println("footballinit");
+    }
+
+    @Override
+    void startPlay() {
+        System.out.println("footballstart");
+    }
+
+    @Override
+    void endGame() {
+        System.out.println("footballend");
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        Game game=new Playfootball();
+        game.play();
+    }
+}
+
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+    11
+    12
+    13
+    14
+    15
+    16
+    17
+    18
+    19
+    20
+    21
+    22
+    23
+    24
+    25
+    26
+    27
+    28
+    29
+    30
+    31
+    32
+    33
+    34
+    35
+    36
+
+介绍
+
+意图： 定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可以重定义该算法的某些特定步骤。
+主要解决：一些方法通用，却在每些方法中都重写了这个方法
+何时使用： 有一些通用的方法
+如何解决：将这些算法抽象出来
+应用实例：
+
+    spring对Hibermate的支持，将一些已经定义好的方法封装起来，比如开启事务，获取Session,关闭Session等，程序员不需要写那些已经规范好的代码，直接丢一个实体就能保存。
+    maven的插件实现
+    spring的自定义标签解析
+
+优点：
+1.封装不变部分，拓展可变部分，
+2. 提供公共代码便于维护
+3. 行为由父类控制，子类实现
+缺点：每一个不同的实现都需要一个子类来实现，导致类的个数增加，使得系统更加庞大
+使用场景：
+1.多个子类有共同的方法。且逻辑相同
+2.重要的、复杂的方法，可以考虑作为模板方法
+注意点：为防止恶意操作，一版模板方法都加上final关键词
+————————————————
+版权声明：本文为CSDN博主「是鹿鸣啊」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/107084172
