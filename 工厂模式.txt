@@ -1,0 +1,74 @@
+什么是工厂模式？
+
+    属于创建型模式，它提供了一种创建对象的最佳方式。
+
+    在工厂模式中，我们在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。
+
+代码示例
+
+在这里插入图片描述
+
+public interface Shape {
+    void draw();
+
+}
+class Square implements Shape{
+
+    @Override
+    public void draw() {
+        System.out.println("draw a square");
+    }
+}
+class Circle implements Shape {
+
+    @Override
+    public void draw() {
+        System.out.println("draw a circle");
+    }
+}
+
+public class ShapeFactory {
+    public Shape getShape(String shapeType) {
+        if(shapeType==null) {
+            return null;
+        }
+        if(shapeType.equals("Squire")){
+            return new Square();
+        }
+        if(shapeType.equals("Circle")) {
+            return new Circle();
+        }
+        return null;
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        ShapeFactory shapeFactory=new ShapeFactory();
+        Shape shape1=shapeFactory.getShape("Squire");
+        shape1.draw();
+        Shape shape2=shapeFactory.getShape("Circle");
+        shape2.draw();
+    }
+}
+
+介绍
+
+    应用实例： 1、您需要一辆汽车，可以直接从工厂里面提货，而不用去管这辆汽车是怎么做出来的，以及这个汽车里面的具体实现。 2、Hibernate 换数据库只需换方言和驱动就可以。
+
+    优点：
+    1、一个调用者想创建一个对象，只要知道其名称就可以了。
+    2、扩展性高，如果想增加一个产品，只要扩展一个工厂类就可以。
+    3、屏蔽产品的具体实现，调用者只关心产品的接口。
+
+    缺点：每次增加一个产品时，都需要增加一个具体类和对象实现工厂，使得系统中类的个数成倍增加，在一定程度上增加了系统的复杂度，同时也增加了系统具体类的依赖。这并不是什么好事。
+
+    使用场景：
+    1、日志记录器：记录可能记录到本地硬盘、系统事件、远程服务器等，用户可以选择记录日志到什么地方。
+    2、数据库访问，当用户不知道最后系统采用哪一类数据库，以及数据库可能有变化时。
+    3、设计一个连接服务器的框架，需要三个协议，“POP3”、“IMAP”、“HTTP”，可以把这三个作为产品类，共同实现一个接口。
+
+    注意事项：作为一种创建类模式，在任何需要生成复杂对象的地方，都可以使用工厂方法模式。有一点需要注意的地方就是复杂对象适合使用工厂模式，而简单对象，特别是只需要通过 new 就可以完成创建的对象，无需使用工厂模式。如果使用工厂模式，就需要引入一个工厂类，会增加系统的复杂度
+————————————————
+版权声明：本文为CSDN博主「是鹿鸣啊」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41552331/article/details/107086823
