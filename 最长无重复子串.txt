@@ -1,0 +1,23 @@
+定义一个head,tail指向字符串开头 tail指针后移，判断tail位置所在的字符串是否在【head，tail】区间内
+如果该区间内没有该元素，将该元素加入该区间，并且tail指针继续向后移，并更新最大值。
+如果包含该元素，则head引用向后移，直至区间中不包含该元素。最后输出最大值。
+
+public static int lengthOfLongestSubstring(String s) {
+        int head=0;
+        int tail=0;
+        if(s.length()<2) {
+            return s.length();
+        }
+        int res=1;
+        while(tail<s.length()-1) {
+            tail++;
+            if(!s.substring(head,tail).contains(s.charAt(tail)+"")) {
+                res=Math.max(tail-head+1,res);
+            }else {
+                while(s.substring(head,tail).contains(s.charAt(tail)+""))
+                head++;
+            }
+
+        }
+        return res;
+    }
