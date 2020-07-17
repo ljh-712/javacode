@@ -1,0 +1,24 @@
+/**
+     *
+     * 判断链表是否有环
+     * 定义快慢指针，一个指向head,一个指向head的下一个节点
+     * 然后一起走，慢的一次走一步，快的一次走两步，最后相遇就是有环
+     * @return
+     */
+    public boolean hasCycle() {
+        if (head==null||head.next==null) {
+            return false;
+        }
+        ListNode slow=head;
+        ListNode fast=head.next;
+        while (slow!=fast) {
+            if (fast==null||fast.next==null) {
+                return false;
+            }
+            slow=slow.next;
+            fast=fast.next.next;
+        }
+        return true;
+
+
+    }
