@@ -1,0 +1,51 @@
+import java.util.Scanner;
+
+/**
+ * @author :Administrator.
+ * @date :2020/7/23 0023
+ * @time:13:06
+ */
+class Main2{
+    private static boolean isPrime(int n) {
+        if (n<2) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n%i == 0) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+    private static String reverse(String s) {
+        return new StringBuffer(s).reverse().toString();
+    }
+    public static boolean isDoublePrime(int n) {
+        if (n==Integer.parseInt(reverse(String.valueOf(n)))) {
+            return false;
+        }
+
+        return isPrime(n)&&isPrime(Integer.parseInt(reverse(String.valueOf(n))));
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int k=sc.nextInt();
+        int count=0;
+        int i=13;
+        while (true) {
+
+            if (isDoublePrime(i)) {
+                count++;
+
+            }
+            if (count==k) {
+                System.out.println(i);
+                break;
+            }
+            i+=2;
+        }
+    }
+
+
+}
