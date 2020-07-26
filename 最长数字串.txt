@@ -1,0 +1,24 @@
+class Main3 {
+    private static boolean isDigitalStr(char c){
+       return c>='0'&&c<='9';
+    }
+    private static String minDigitalStr(String s) {
+        StringBuffer curStr=new StringBuffer();
+        StringBuffer res=new StringBuffer();
+        for (int i = 0; i < s.length(); i++) {
+            char temp=s.charAt(i);
+            if (isDigitalStr(temp)) {
+                curStr.append(temp);
+            }else {
+                if (res.length()<curStr.length()) {
+                    res=curStr;
+                    curStr=new StringBuffer();
+                }else {
+                    curStr=new StringBuffer();
+                }
+            }
+        }
+
+        return curStr.length()>res.length()?new String(curStr):new String(res);
+
+    }
