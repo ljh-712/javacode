@@ -1,0 +1,56 @@
+线程池
+什么是线程池？
+线程池就是提前创建若干线程，如果有任务要处理，线程池就会处理，处理完后线程并不会销毁，而是等待下一个任务，由于创建和销毁线程是消耗资源的，所以当你想要频繁创建和销毁线程的时候就可以考虑使用线程池来提升系统的性能
+
+线程池的七大参数
+public ThreadPoolExecutor(int corePoolSize,//核心线程数
+                              int maximumPoolSize,//线程池最大线程数
+                              long keepAliveTime,//空闲线程存活时间
+                              TimeUnit unit,//线程存活的时间单位
+                              BlockingQueue<Runnable> workQueue) //工作队列{
+        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+             Executors.defaultThreadFactory(),//线程工场 defaultHandler//拒绝策略);
+    }
+
+假设有下面的场景：
+
+比如去火车站买票, 有10个售票窗口, 但只有5个窗口对外开放. 那么对外开放的5个窗口称为核心线程数,而最大线程数是10个窗口.如果5个窗口都被占用, 那么后来的人就必须在后面排队, 但后来售票厅人越来越多, 已经人满为患, 就类似于线程队列已满.这时候火车站站长下令, 把剩下的5个窗口也打开, 也就是目前已经有10个窗口同时运行.后来又来了一批人,10个窗口也处理不过来了, 而且售票厅人已经满了, 这时候站长就下令封锁入口,不允许其他人再进来,这就是线程异常处理策略.而线程存活时间指的是, 允许售票员休息的最长时间, 以此限制售票员偷懒的行为.
+
+corePoolSize线程池核心线程大小：
+线程池会维护一个最小的线程数量，即使这些线程处于空闲状态也不会被销毁
+maximumPoolSize(线程池内最大线程数量)
+一个任务被提交到线程池后，首先会缓存到工作队列，如果工作队列满了从工作队列中取出一个任务交由新线程处理，而将刚提交的任务放入工作队列，线程池并不会无限制的创建新线程
+keepAliveTime空闲线程存活时间
+一个线程处于空闲状态，并且当前数量大于核心线程数，那么在指定的时间后，这个空闲线程会被销毁
+TimeUnit：空闲线程的保留时间单位
+TimeUnit.DAYS;               //天
+TimeUnit.HOURS;             //小时
+TimeUnit.MINUTES;           //分钟
+TimeUnit.SECONDS;           //秒
+TimeUnit.MILLISECONDS;      //毫秒
+TimeUnit.MICROSECONDS;      //微妙
+TimeUnit.NANOSECONDS;       //纳秒
+
+workQueue工作队列
+新任务提交后，先进入到此工作队列，任务调度时再从队列中取出任务
+①ArrayBlockingQueue
+基于数组的有界阻塞队列，按FIFO排序。新任务进来后，会放到该队列的队尾，有界的数组可以防止资源耗尽问题。当线程池中线程数量达到corePoolSize后，再有新任务进来，则会将任务放入该队列的队尾，等待被调度。如果队列已经是满的，则创建一个新线程，如果线程数量已经达到maxPoolSize，则会执行拒绝策略。
+②LinkedBlockingQuene
+基于链表的无界阻塞队列（其实最大容量为Interger.MAX），按照FIFO排序。由于该队列的近似无界性，当线程池中线程数量达到corePoolSize后，再有新任务进来，会一直存入该队列，而不会去创建新线程直到maxPoolSize，因此使用该工作队列时，参数maxPoolSize其实是不起作用的。
+③SynchronousQuene
+一个不缓存任务的阻塞队列，生产者放入一个任务必须等到消费者取出这个任务。也就是说新任务进来时，不会缓存，而是直接被调度执行该任务，如果没有可用线程，则创建新线程，如果线程数量达到maxPoolSize，则执行拒绝策略。
+④PriorityBlockingQueue
+具有优先级的无界阻塞队列，优先级通过参数Comparator实现。
+
+threadFactory 线程工厂
+创建一个新线程时使用的工厂，可以用来设定线程名、是否为daemon线程等等
+
+拒绝策略
+①CallerRunPolicy
+该策略下在调用这线程中直接执行被拒绝任务的run方法，除非线程池已经shutdown,则直接抛弃任务
+②AbortPolicy
+该策略下，直接丢弃任务并抛出RejectedExecutionException异常。
+③DiscardPolicy
+该策略下，直接丢弃任务，什么都不做。
+④DiscardOldestPolicy
+该策略下，抛弃进入队列最早的那个任务，然后尝试把这次拒绝的任务放入队列
