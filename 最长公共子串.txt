@@ -1,0 +1,67 @@
+class Demo{
+    /**
+     * 给定两个字符串str1和str2,输出两个字符串的最长公共子串，如果最长公共子串为空，输出-1。
+     * @param s1
+     * @param s2
+     * @return
+     */
+    private static int sameLongStrLen(String s1,String s2) {
+        int[][] dp=new int[s1.length()][s2.length()];
+        for (int i = 0; i < s1.length(); i++) {
+            dp[i][0]=(s1.charAt(i)==s2.charAt(0))?1:0;
+        }
+        for (int i = 0; i < s2.length(); i++) {
+            dp[0][i]=(s1.charAt(0)==s2.charAt(i))?1:0;
+        }
+        int curMax=0;
+        for (int i = 1; i < s1.length(); i++) {
+            for (int j = 1; j < s2.length(); j++) {
+                if (s1.charAt(i)==s2.charAt(j)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    curMax=Math.max(curMax,dp[i][j]);
+                }
+
+            }
+
+        }
+
+        return curMax;
+
+    }
+    private static String getSameStr(String s1,String s2) {
+        int[][] dp=new int[s1.length()][s2.length()];
+        for (int i = 0; i < s1.length(); i++) {
+            dp[i][0]=(s1.charAt(i)==s2.charAt(0))?1:0;
+        }
+        for (int i = 0; i < s2.length(); i++) {
+            dp[0][i]=(s1.charAt(0)==s2.charAt(i))?1:0;
+        }
+        int curMax=0;
+        int maxR=0;
+        for (int i = 1; i < s1.length(); i++) {
+            for (int j = 1; j < s2.length(); j++) {
+                if (s1.charAt(i)==s2.charAt(j)) {
+                    dp[i][j] = dp[i - 1][j - 1]+1;
+                    curMax = Math.max(curMax, dp[i][j]);
+
+                }
+
+            }
+
+        }
+        for (int i = 0; i < s1.length(); i++) {
+            for (int j = 0; j < s2.length(); j++) {
+                if (curMax==dp[i][j])
+                    maxR=i;
+            }
+        }
+        return s1.substring(maxR-curMax+1,maxR+1);
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        String s1=sc.nextLine();
+        String s2=sc.nextLine();
+        //.out.println(sameLongStrLen(s1, s2));
+        System.out.println(getSameStr(s1,s2));
+    }
+}
