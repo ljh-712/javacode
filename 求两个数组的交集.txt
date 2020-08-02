@@ -1,0 +1,48 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author :Administrator.
+ * @date :2020/8/2 0002
+ * @time:22:40
+ */
+public class 数组的交集 {
+    public static void main(String[] args) {
+        int[] a={1,2,3};
+        int[] b={2,3};
+//        List<Integer> list=new ArrayList<>();
+//        for (int i = 0; i < a.length; i++) {
+//            for (int j = 0; j < b.length; j++) {
+//                if (a[i]==b[j]) {
+//                    list.add(a[i]);
+//                }
+//            }
+//        }
+//        System.out.println(list);
+        findSameNumber(a,b);
+    }
+
+    private static void findSameNumber(int[] a,int[] b){
+        Arrays.sort(a);
+        Arrays.sort(b);
+        int maxA=a[a.length-1];
+        int maxB=b[b.length-1];
+        int n=0;
+        if (maxA>maxB) {
+            n=maxA+1;
+        }else {
+            n=maxB+1;
+        }
+
+        int[] count=new int[n];
+        for (int i = 0; i < a.length; i++) {
+            count[a[i]]=1;
+        }
+        for (int i = 0; i < b.length; i++) {
+            if (count[b[i]]==1) {
+                System.out.print(b[i]+" ");
+            }
+        }
+    }
+}
