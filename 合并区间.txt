@@ -1,0 +1,86 @@
+package bytetens;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author :Administrator.
+ * @date :2020/8/8 0008
+ * @time:9:48
+ */
+public class 合并区间 {
+    public static int[][] merge(int[][] intervals) {
+        List<int[]> inter = Arrays.asList(intervals);
+        List<int[]> newInter = new ArrayList<>(inter);
+        newInter.sort((o1, o2) -> o1[0] - o2[0]);
+
+
+        List<int[]> res = new ArrayList<>();
+
+        for(int i = 0; i < newInter.size();)
+        {
+            int t = newInter.get(i)[1];
+            int j = i + 1;
+            while(j < newInter.size() && newInter.get(j)[0] <= t)
+            {
+                t = Math.max(t, newInter.get(j)[1]);
+                j++;
+            }
+            res.add(new int[]{newInter.get(i)[0], t});
+            i = j;
+        }
+
+        int[][] ans = new int[res.size()][2];
+        for(int i = 0; i < res.size(); i++)
+        {
+            ans[i][0] = res.get(i)[0];
+            ans[i][1] = res.get(i)[1];
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int[][] arr={{1,3},{15,18},{2,6}};
+
+        System.out.println(Arrays.deepToString(merge1(arr)));
+    }
+
+    /**
+     * 给出一个区间的集合，请合并所有重叠的区间。
+     *
+     * 示例 1:
+     *
+     * 输入: [[1,3],[2,6],[8,10],[15,18]]
+     * 输出: [[1,6],[8,10],[15,18]]
+     * 解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6]
+     * @param intervals
+     * @return
+     */
+    public static int[][] merge1(int[][] intervals) {
+        List<int[]> temp=Arrays.asList(intervals);
+        List<int[]> newArr=new ArrayList<>(temp);//Arrays.asList()不支持add，remove
+        newArr.sort((o1, o2) -> o1[0]-o2[0]);//将集合按照首元素排序
+        List<int[]> ret=new ArrayList<>();//保存结果
+
+        //接下来合并
+        for (int i = 0; i < newArr.size(); ) {
+            int t=newArr.get(i)[1];
+            int j=i+1;
+            while (j<newArr.size()&&newArr.get(j)[0]<=t) {
+                t=Math.max(t,newArr.get(j)[1]);
+                j++;
+            }
+            ret.add(new int[]{newArr.get(i)[0],t});
+            i=j;
+
+        }
+        int[][] ans=new int[ret.size()][2];
+        for (int i = 0; i < ret.size(); i++) {
+            ans[i][0]=ret.get(i)[0];
+            ans[i][1]=ret.get(i)[1];
+        }
+        return ans;
+
+    }
+}
