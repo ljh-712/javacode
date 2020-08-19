@@ -1,0 +1,74 @@
+## 位图法
+
+> 位图法就是bitmap的缩写，所谓bitmap，就是用每一位来存放某种状态，适用于**大规模数据**，但**数据状态又不是很多**的情况。通常是用来判断某个数据存不存在的。
+
+## 应用场景
+**一、给40亿个不重复的unsigned int的整数，没排过序的，然后再给一个数，如何快速判断这个数是否在那40亿个数当中。**
+
+解法：
+
+> 我们可以申请512MB内存（512*1024*1024（bit）>40亿）一个比特位代表一个值
+> 读入40亿个数，设置相应的bit位
+读入要查询的数，查看相应bit位是否为1，为1表示存在，为0表示不存在
+
+**二、使用位图法判断整形数组是否存在重复**
+*判断集合中存在重复是常见编程任务之一，当集合中数据量比较大时我们通常希望少进行几次扫描，这时双重循环法就不可取了。*
+
+> **思路：**按照集合中最大元素max创建一个长度为max+1的新数组，然后再次扫描原数组，遇到几就给新数组的第几位置上1，如遇到 5就给新数组的第六个元素置1，这样下次再遇到5想置位时发现新数组的第六个元素已经是1了，这说明这次的数据肯定和以前的数据存在着重复。这种给新数组初始化时置零其后置一的做法类似于位图的处理方法故称位图法。它的运算次数最坏的情况为2N。如果已知数组的最大值即能事先给新数组定长的话效率还能提高一倍。
+
+```java
+private static boolean hasDuplicatedItem( int [] arr) {
+        int max=0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i]>max) {
+                max=arr[i];
+            }
+        }
+        int[] flag=new int[max+1];
+        for (int i = 0; i < arr.length; i++) {
+            if (flag[arr[i]]!=0) {//如果arr[i]指向的位置已经不是零，说明之前已经给这一块置1了，立即返回true表示数组有重复
+                return true;
+            }else {
+                flag[arr[i]]=1;
+            }
+        }
+        return false;
+    }
+```
+
+
+**三、使用位图进行整形数组排序**
+
+```java
+    public static void bitmapSort( int [] arr) {
+        int max = arr[0];
+        int min = max;
+        for (int i : arr) {
+            if (max < i) {
+                max = i;
+            }
+            if (min > i) {
+                min = i;
+            }
+        }
+        //得到位图数组
+        int[] newArr=new int[max-min+1];
+        int index=0;
+        for (int num: arr) {
+            index=num-min;
+            newArr[index]++;
+        }
+        //调整arr数组
+        index=0;
+        for (int i = 0; i < newArr.length; i++) {
+            while (newArr[i]>0) {
+                arr[index]=i+min;
+                index++;
+                newArr[i]--;
+            }
+        }
+    }
+```
+
+
+
