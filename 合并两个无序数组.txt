@@ -1,0 +1,50 @@
+class Solution {
+    private static void merge(int[] a,int[] b) {
+        List<Integer> list=new ArrayList<>();
+        int max1=0;
+        int max2=0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i]>max1) {
+                max1=a[i];
+            }
+        }
+        for (int i = 0; i < b.length; i++) {
+            if (b[i]>max2) {
+                max2=b[i];
+            }
+        }
+        int len= Math.max(max1, max2);
+        int[] nums=new int[len+1];
+        for (int i = 0; i < a.length; i++) {
+            nums[a[i]]++;
+
+        }
+        for (int i = 0; i < b.length; i++) {
+
+            nums[b[i]]++;
+        }
+        System.out.println(Arrays.toString(nums));
+        for (int i = 0; i <nums.length ; i++) {
+            if (nums[i]!=0) {
+                list.add(i);
+            }
+        }
+        System.out.println(list);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int m=sc.nextInt();
+        int n=sc.nextInt();
+        int[] a=new int[m];
+        int[] b=new int[n];
+        for (int i = 0; i < m; i++) {
+            a[i]=sc.nextInt();
+        }
+        for (int i = 0; i < n; i++) {
+            b[i]=sc.nextInt();
+        }
+        merge(a,b);
+    }
+
+}
