@@ -1,0 +1,15 @@
+private static int[] shuffle(int[] arr) {
+        if (arr.length==0) {
+            return new int[0];
+        }
+        int n=arr.length;
+        List<Integer> list=new ArrayList<>();
+        for (int i = 0; i < n/2; i++) {
+            list.add(arr[i+n/2]);
+            list.add(arr[i]);
+        }
+        for (int i = 0; i < n; i++) {
+            arr[i]=list.get(i);
+        }
+        return arr;
+    }
