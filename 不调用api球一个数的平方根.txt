@@ -1,0 +1,38 @@
+public class Demo2 {
+    private static double sqrt(int n) {
+        int i = 0;
+
+        for (; i <= n; i++) {
+            if (i*i==n) {
+                return i;
+            }
+            if (i*i>n){
+                break;
+            }
+        }
+        double left=i-1;
+        double right=i;
+        double mid=0;
+        while (right-left>0.00001) {
+            mid=(right+left)/2;
+            double s=mid*mid;
+            if (s>n) {
+                right=mid;
+            }else {
+                left=mid;
+            }
+        }
+        return mid;
+
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n=sc.nextInt();
+            System.out.println(sqrt(n));
+            System.out.println(Math.sqrt(n));
+
+
+        }
+    }
+}
