@@ -1,0 +1,26 @@
+public class Jianxin {
+    //[123,456,789]
+    //147258369
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        String s=sc.nextLine();
+        String[] arr=s.split(" ");
+        StringBuilder sb=new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(arr[i]);
+        }
+        System.out.println(sb);
+        StringBuilder sb1=new StringBuilder();
+        String st=new String(sb);
+        for (int i = 0; i <st.length()/arr.length; i++) {
+            int j=i;
+            while (j<st.length()) {
+                sb1.append(st.charAt(j));
+                j+=3;
+            }
+
+        }
+        System.out.println(sb1);
+
+    }
+}
